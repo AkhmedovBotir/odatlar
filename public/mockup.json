@@ -1,0 +1,75 @@
+{
+  "user": {
+    "name": "Botir",
+    "level": 1,
+    "xp": 350,
+    "nextLevelXp": 1000,
+    "coins": 50,
+    "badges": ["Erta uyg'onuvchi", "Kitobxon"]
+  },
+  "goodHabits": [
+    {
+      "id": "kitob_oqish",
+      "name": "Kitob o'qish",
+      "benefits": ["Sog'liq uchun foyda", "Yangi ma'lumotlar", "Diqqat rivojlanadi"],
+      "completedToday": false,
+      "streak": 3
+    },
+    {
+      "id": "rejalashtirish",
+      "name": "Rejalashtirish",
+      "benefits": ["Stress kamayadi", "Ko'proq ishlarga ulgurasiz", "Hayotingizda ma'no paydo bo'ladi", "Miyangiz yaxshiroq ishlaydi"],
+      "completedToday": true,
+      "streak": 7
+    },
+    {
+      "id": "sport",
+      "name": "Sport bilan shug'ullanish",
+      "benefits": ["Sog'liq", "Energiya", "Ko'proq ishlarga ulgurish"],
+      "completedToday": false,
+      "streak": 0
+    },
+    {
+      "id": "telefonsiz_uxlash",
+      "name": "Telefonsiz uxlash",
+      "benefits": ["Stress kamayadi", "Zararli odatlardan qutilish osonlashadi", "Uyqu rejimi yaxshilanadi", "Erta turish boshlanadi"],
+      "completedToday": false,
+      "streak": 4
+    },
+    {
+      "id": "erta_turish",
+      "name": "Erta turish",
+      "benefits": ["Ko'p ishga ulgurish", "Stress kamayadi", "Self-study ga vaqt ajratish", "Vaqtni befoyda sarflashni bas qilasiz"],
+      "completedToday": false,
+      "streak": 5
+    }
+  ],
+  "dominants": [
+    {
+      "id": "dom_1",
+      "title": "Ijtimoiy tarmoqlarni cheklash",
+      "type": "fikrlash",
+      "cue": "Zerkish yoki charchoq paytida telefonga yopishish",
+      "reward": "Tezkor dopamin va vaqt yo'qotish",
+      "pros": ["Vaqt tejaladi", "Miya dam oladi"],
+      "cons": ["Yangiliklardan biroz ortda qolish hissi"],
+      "sessionsCompleted": 2
+    }
+  ],
+  "clubTasks": [
+    { "id": "task_1", "text": "Haftalik kitob tahlilida qatnashish", "xpReward": 150, "completed": false },
+    { "id": "task_2", "text": "Ertalabki 10 daqiqalik dominanta mashqini bajarish", "xpReward": 100, "completed": true }
+  ],
+  "leaderboard": [
+    { "rank": 1, "name": "Aliyor", "xp": 2450, "level": 5 },
+    { "rank": 2, "name": "Botir", "xp": 350, "level": 1 },
+    { "rank": 3, "name": "Sardor", "xp": 310, "level": 1 },
+    { "rank": 4, "name": "Dilshod", "xp": 280, "level": 1 },
+    { "rank": 5, "name": "Malika", "xp": 245, "level": 1 },
+    { "rank": 6, "name": "Jasur", "xp": 210, "level": 1 },
+    { "rank": 7, "name": "Nodira", "xp": 175, "level": 1 },
+    { "rank": 8, "name": "Farhod", "xp": 140, "level": 1 },
+    { "rank": 9, "name": "Zarina", "xp": 95, "level": 1 },
+    { "rank": 10, "name": "Timur", "xp": 60, "level": 1 }
+  ]
+}

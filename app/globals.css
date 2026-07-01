@@ -167,3 +167,33 @@
     @apply font-sans;
   }
 }
+
+@layer utilities {
+  .page-content {
+    @apply p-4 md:p-8 lg:p-10 max-w-6xl xl:max-w-7xl mx-auto min-h-0;
+    padding-bottom: calc(6.25rem + env(safe-area-inset-bottom, 0px));
+  }
+
+  @media (min-width: 1024px) {
+    .page-content {
+      padding-bottom: 2.5rem;
+    }
+  }
+
+  .safe-top {
+    padding-top: env(safe-area-inset-top, 0px);
+  }
+
+  .safe-bottom {
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+}

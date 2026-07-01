@@ -135,18 +135,14 @@ export default function Home({ userData, addReward }: HomeProps) {
                 className="bg-gradient-to-br from-purple-900/30 to-purple-800/20 rounded-lg p-4 border border-purple-500/30 hover:border-purple-500/50 transition-all"
               >
                 <div className="flex items-start justify-between">
-                  <div>
-                    <h3 className="font-semibold text-white mb-1">{dominant.title}</h3>
-                    <p className="text-xs md:text-sm text-purple-300">
-                      {dominant.type === 'fikrlash' ? '🤔 Fikrlash' : '📚 O\'qish'}
-                    </p>
+                  <div className="min-w-0">
+                    <h3 className="font-semibold text-white mb-1 truncate">{dominant.title}</h3>
+                    <p className="text-xs text-purple-400/80 truncate">⚡ {dominant.cue}</p>
                     <p className="text-xs text-purple-400/60 mt-2">
-                      {dominant.sessionsCompleted} sessiya tugallandi
+                      {dominant.sessionsCompleted} sessiya
                     </p>
                   </div>
-                  <span className="text-2xl">
-                    {dominant.type === 'fikrlash' ? '🤔' : '📚'}
-                  </span>
+                  <span className="text-2xl flex-shrink-0 ml-2">🧠</span>
                 </div>
               </motion.div>
             ))}

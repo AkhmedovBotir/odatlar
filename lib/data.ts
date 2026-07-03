@@ -1,5 +1,6 @@
 import type { UserData } from './types';
 import { generateSeedHistory } from './habits';
+import { normalizeHabits } from './indicators';
 
 const STORAGE_KEY = 'clubAppData';
 
@@ -13,13 +14,14 @@ export function applyDailyReset(data: UserData): UserData {
     goodHabits: data.goodHabits.map((habit) => ({
       ...habit,
       completedToday: false,
+      todayIndicatorValue: habit.kind === 'indicator' ? null : habit.todayIndicatorValue,
     })),
   };
 }
 
 export function buildInitialUserData(mock: Record<string, unknown>): UserData {
   const user = mock.user as UserData;
-  const goodHabits = mock.goodHabits as UserData['goodHabits'];
+  const goodHabits = normalizeHabits(mock.goodHabits as UserData['goodHabits']);
   return {
     name: user.name,
     level: user.level,
@@ -49,6 +51,7 @@ export async function loadUserData(): Promise<UserData> {
       const { clubTasks: _removed, ...rest } = parsed as UserData & { clubTasks?: unknown };
       const withLeaderboard = {
         ...rest,
+        goodHabits: normalizeHabits(rest.goodHabits ?? merged.goodHabits),
         leaderboard: merged.leaderboard,
         habitHistory: rest.habitHistory?.length
           ? rest.habitHistory

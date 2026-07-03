@@ -79,7 +79,7 @@ export default function TopNav({ showBack = false }: TopNavProps) {
       initial={{ y: -24, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.25 }}
-      className="safe-top flex-shrink-0 px-3 sm:px-4 lg:px-8 pt-3 pb-2 lg:pt-4 lg:pb-0"
+      className="safe-top flex-shrink-0 px-3 sm:px-4 lg:px-8 pt-2 pb-2.5 lg:pt-3 lg:pb-3"
     >
       <div className="max-w-7xl mx-auto">
         {/* Mobile / tablet */}

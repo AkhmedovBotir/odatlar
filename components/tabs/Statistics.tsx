@@ -1,265 +1,299 @@
 'use client';
 
-import { motion } from 'framer-motion';
-import { Award, Star, TrendingUp } from 'lucide-react';
+import { Suspense, useState } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { motion, AnimatePresence } from 'framer-motion';
+import { BarChart3, Brain, CheckCircle2, Trophy } from 'lucide-react';
 import { useUserData } from '@/components/UserDataProvider';
 import PageContainer from '@/components/PageContainer';
-import { getUserRank } from '@/lib/gamification';
+import HabitTabNav from '@/components/habits/HabitTabNav';
+import ArchiveFilterModal, { ArchiveFilterButton } from '@/components/habits/ArchiveFilterModal';
+import ActivityChart from '@/components/statistics/ActivityChart';
+import StatsTable from '@/components/statistics/StatsTable';
+import LeaderboardPanel from '@/components/statistics/LeaderboardPanel';
+import { getPractices, getIndicators } from '@/lib/indicators';
+import {
+  parseArchiveDateFilter,
+  serializeArchiveDateFilter,
+  type ArchiveDateFilter,
+} from '@/lib/habits';
+import {
+  getDominantBars,
+  getDominantStatRows,
+  getDominantSummary,
+  getHabitDailyBars,
+  getHabitStatRows,
+  getHabitStatSummary,
+} from '@/lib/stats';
 
-export default function Statistics() {
-  const { userData } = useUserData();
+type StatsTab = 'reyting' | 'amaliyotlar' | 'indikatorlar' | 'dominantalar';
 
-  if (!userData) return null;
+const statsTabs: {
+  id: StatsTab;
+  label: string;
+  shortLabel: string;
+  icon: typeof CheckCircle2;
+}[] = [
+  { id: 'reyting', label: 'Reyting', shortLabel: 'Reyting', icon: Trophy },
+  { id: 'amaliyotlar', label: 'Amaliyotlar', shortLabel: 'Amal.', icon: CheckCircle2 },
+  { id: 'indikatorlar', label: 'Indikatorlar', shortLabel: 'Indik.', icon: BarChart3 },
+  { id: 'dominantalar', label: 'Dominantalar', shortLabel: 'Dom.', icon: Brain },
+];
 
-  const progressPercent = (userData.xp / userData.nextLevelXp) * 100;
-  const podium = userData.leaderboard.slice(0, 3).sort((a, b) => a.rank - b.rank);
-  const remainingLeaderboard = userData.leaderboard.filter((member) => member.rank > 3);
-  const userRank = getUserRank(userData);
+function parseStatsTab(value: string | null): StatsTab {
+  if (
+    value === 'reyting' ||
+    value === 'amaliyotlar' ||
+    value === 'indikatorlar' ||
+    value === 'dominantalar'
+  ) {
+    return value;
+  }
+  return 'reyting';
+}
 
-  const getMedalColor = (rank: number) => {
-    switch (rank) {
-      case 1:
-        return 'from-yellow-400 to-yellow-600';
-      case 2:
-        return 'from-gray-300 to-gray-500';
-      case 3:
-        return 'from-orange-400 to-orange-600';
-      default:
-        return 'from-slate-400 to-slate-600';
-    }
-  };
-
-  const getMedalEmoji = (rank: number) => {
-    switch (rank) {
-      case 1:
-        return '🥇';
-      case 2:
-        return '🥈';
-      case 3:
-        return '🥉';
-      default:
-        return '';
-    }
-  };
-
-  const getPodiumHeight = (rank: number) => {
-    switch (rank) {
-      case 1:
-        return 'h-32';
-      case 2:
-        return 'h-24';
-      case 3:
-        return 'h-16';
-      default:
-        return 'h-12';
-    }
+function StatChip({
+  label,
+  value,
+  tone = 'neutral',
+}: {
+  label: string;
+  value: string | number;
+  tone?: 'emerald' | 'cyan' | 'violet' | 'red' | 'neutral';
+}) {
+  const styles = {
+    emerald: 'border-emerald-900/50 bg-emerald-950/30 text-emerald-400',
+    cyan: 'border-cyan-900/50 bg-cyan-950/30 text-cyan-400',
+    violet: 'border-violet-900/50 bg-violet-950/30 text-violet-400',
+    red: 'border-red-900/50 bg-red-950/30 text-red-400',
+    neutral: 'border-slate-700/60 bg-slate-800/60 text-slate-200',
   };
 
   return (
+    <div
+      className={`flex min-w-[4.5rem] flex-col items-center justify-center rounded-lg border px-2.5 py-1.5 ${styles[tone]}`}
+    >
+      <span className="text-[9px] font-semibold uppercase tracking-wide opacity-70">{label}</span>
+      <span className="text-sm font-bold tabular-nums leading-tight">{value}</span>
+    </div>
+  );
+}
+
+function StatisticsContent() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const { userData } = useUserData();
+  const [filterOpen, setFilterOpen] = useState(false);
+
+  if (!userData) return null;
+
+  const activeTab = parseStatsTab(searchParams.get('tab'));
+  const history = userData.habitHistory ?? [];
+  const dateFilter = parseArchiveDateFilter(searchParams.get('davr'), history);
+  const davrParam = serializeArchiveDateFilter(dateFilter);
+  const practices = getPractices(userData.goodHabits);
+  const indicators = getIndicators(userData.goodHabits);
+  const dominants = userData.dominants ?? [];
+
+  const setTab = (tab: StatsTab) => {
+    if (tab === 'reyting') {
+      router.replace('/statistika?tab=reyting', { scroll: false });
+      return;
+    }
+    if (tab === 'amaliyotlar') {
+      router.replace(`/statistika?tab=amaliyotlar&davr=${davrParam}`, { scroll: false });
+      return;
+    }
+    router.replace(`/statistika?tab=${tab}&davr=${davrParam}`, { scroll: false });
+  };
+
+  const setDateFilter = (next: ArchiveDateFilter) => {
+    router.replace(
+      `/statistika?tab=${activeTab}&davr=${serializeArchiveDateFilter(next)}`,
+      { scroll: false }
+    );
+  };
+
+  const practiceSummary = getHabitStatSummary(practices, history, dateFilter, 'practice');
+  const indicatorSummary = getHabitStatSummary(indicators, history, dateFilter, 'indicator');
+  const dominantSummary = getDominantSummary(dominants);
+
+  const summary =
+    activeTab === 'amaliyotlar'
+      ? practiceSummary
+      : activeTab === 'indikatorlar'
+        ? indicatorSummary
+        : dominantSummary;
+
+  const accentTone =
+    activeTab === 'indikatorlar' ? 'cyan' : activeTab === 'dominantalar' ? 'violet' : 'emerald';
+
+  const chartAccent =
+    activeTab === 'indikatorlar' ? 'cyan' : activeTab === 'dominantalar' ? 'violet' : 'emerald';
+
+  return (
     <PageContainer>
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8 mb-8">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="bg-gradient-to-r from-blue-900/40 to-purple-900/40 rounded-lg p-6 md:p-8 border border-blue-500/30"
-        >
-          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between mb-6">
-            <div className="min-w-0">
-              <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold mb-2">{userData.name}</h2>
-              <p className="text-sm md:text-base text-slate-300">
-                {userData.level}-daraja | Reyting #{userRank ?? '-'}
-              </p>
-            </div>
-            <div className="text-3xl sm:text-4xl flex-shrink-0">👤</div>
-          </div>
+      <HabitTabNav
+        tabs={statsTabs}
+        activeTab={activeTab}
+        onChange={setTab}
+        layoutId="statsTab"
+        action={
+          activeTab !== 'dominantalar' && activeTab !== 'reyting' ? (
+            <ArchiveFilterButton onClick={() => setFilterOpen(true)} isActive={filterOpen} />
+          ) : undefined
+        }
+      />
 
-          <div className="grid grid-cols-3 gap-3 sm:gap-4 mb-6">
-            <div>
-              <p className="text-xs md:text-sm text-slate-400 mb-1">XP</p>
-              <p className="text-2xl md:text-3xl font-bold text-blue-400">{userData.xp}</p>
-            </div>
-            <div>
-              <p className="text-xs md:text-sm text-slate-400 mb-1">Tangalar</p>
-              <p className="text-2xl md:text-3xl font-bold text-yellow-400">{userData.coins}</p>
-            </div>
-            <div>
-              <p className="text-xs md:text-sm text-slate-400 mb-1">Daraja</p>
-              <p className="text-2xl md:text-3xl font-bold text-purple-400">{userData.level}</p>
-            </div>
-          </div>
+      <ArchiveFilterModal
+        open={filterOpen}
+        value={dateFilter}
+        onChange={setDateFilter}
+        onClose={() => setFilterOpen(false)}
+      />
 
-          <div>
-            <div className="flex items-center justify-between mb-2">
-              <span className="text-xs md:text-sm text-slate-300">Keyingi darajaga</span>
-              <span className="text-xs md:text-sm text-slate-400">
-                {userData.xp} / {userData.nextLevelXp}
-              </span>
-            </div>
-            <div className="w-full bg-slate-700 rounded-full h-2 overflow-hidden">
-              <motion.div
-                initial={{ width: 0 }}
-                animate={{ width: `${progressPercent}%` }}
-                transition={{ duration: 0.8, ease: 'easeOut' }}
-                className="h-full bg-gradient-to-r from-blue-500 to-purple-600 rounded-full"
-              />
-            </div>
-          </div>
-        </motion.div>
-
-        <div className="grid grid-cols-2 gap-4">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1 }}
-            className="bg-gradient-to-br from-slate-800 to-slate-700 rounded-lg p-4 lg:p-5 border border-slate-600"
-          >
-            <div className="flex items-center justify-between mb-3">
-              <span className="text-slate-400 text-xs md:text-sm font-medium">Daraja</span>
-              <Award className="w-5 h-5 text-yellow-400" />
-            </div>
-            <p className="text-3xl lg:text-4xl font-bold">{userData.level}</p>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2 }}
-            className="bg-gradient-to-br from-slate-800 to-slate-700 rounded-lg p-4 lg:p-5 border border-slate-600"
-          >
-            <div className="flex items-center justify-between mb-3">
-              <span className="text-slate-400 text-xs md:text-sm font-medium">XP</span>
-              <Star className="w-5 h-5 text-yellow-400" />
-            </div>
-            <p className="text-3xl lg:text-4xl font-bold">{userData.xp}</p>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3 }}
-            className="bg-gradient-to-br from-slate-800 to-slate-700 rounded-lg p-4 lg:p-5 border border-slate-600"
-          >
-            <div className="flex items-center justify-between mb-3">
-              <span className="text-slate-400 text-xs md:text-sm font-medium">Tangalar</span>
-              <span className="text-xl md:text-2xl">🪙</span>
-            </div>
-            <p className="text-3xl lg:text-4xl font-bold">{userData.coins}</p>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.4 }}
-            className="bg-gradient-to-br from-slate-800 to-slate-700 rounded-lg p-4 lg:p-5 border border-slate-600"
-          >
-            <div className="flex items-center justify-between mb-3">
-              <span className="text-slate-400 text-xs md:text-sm font-medium">Nishonlar</span>
-              <TrendingUp className="w-5 h-5 text-blue-400" />
-            </div>
-            <p className="text-3xl lg:text-4xl font-bold">{userData.badges?.length || 0}</p>
-          </motion.div>
-        </div>
+      {activeTab !== 'reyting' && (
+      <div className="mb-5 flex flex-wrap gap-2">
+        {activeTab === 'dominantalar' ? (
+          <>
+            <StatChip label="Jami" value={summary.completed} tone="violet" />
+            <StatChip label="Dominantalar" value={dominants.length} tone="neutral" />
+            <StatChip
+              label="O'rtacha"
+              value={dominants.length > 0 ? summary.rate : 0}
+              tone="violet"
+            />
+          </>
+        ) : (
+          <>
+            <StatChip label="Foiz" value={`${summary.rate}%`} tone={accentTone} />
+            <StatChip
+              label={activeTab === 'indikatorlar' ? 'Kiritilgan' : 'Bajarilgan'}
+              value={summary.completed}
+              tone={accentTone}
+            />
+            {activeTab === 'indikatorlar' && summary.skipped > 0 && (
+              <StatChip label="O'tkazilgan" value={summary.skipped} tone="neutral" />
+            )}
+            <StatChip
+              label={activeTab === 'indikatorlar' ? 'Kiritilmagan' : 'Bajarilmagan'}
+              value={summary.missed}
+              tone="red"
+            />
+            <StatChip label="Kunlar" value={summary.dayCount} tone="neutral" />
+          </>
+        )}
       </div>
-
-      {userData.badges?.length > 0 && (
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.45 }}
-          className="mb-8 bg-slate-800/50 rounded-xl p-4 md:p-6 border border-slate-600"
-        >
-          <h3 className="text-lg font-bold mb-3">🏅 Mening nishonlarim</h3>
-          <div className="flex flex-wrap gap-2">
-            {userData.badges.map((badge) => (
-              <span
-                key={badge}
-                className="bg-blue-900/30 text-blue-300 px-3 py-1.5 rounded-full text-sm border border-blue-500/20"
-              >
-                {badge}
-              </span>
-            ))}
-          </div>
-        </motion.div>
       )}
 
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.5 }}
-        className="mt-10 md:mt-14 mb-8"
-      >
-        <h2 className="text-2xl font-bold mb-6 md:mb-8">🏆 Klub Reytingi</h2>
+      <AnimatePresence mode="wait">
+        {activeTab === 'reyting' && (
+          <motion.div
+            key="reyting"
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -8 }}
+          >
+            <h2 className="mb-3 text-lg font-bold">Klub Reytingi</h2>
+            <LeaderboardPanel
+              leaderboard={userData.leaderboard}
+              currentUserName={userData.name}
+            />
+          </motion.div>
+        )}
 
-        <div className="grid grid-cols-1 xl:grid-cols-2 gap-8 xl:gap-12">
-          <div className="flex items-end justify-center gap-2 md:gap-4 px-1">
-          {[2, 1, 3].map((position) => {
-            const member = podium.find((m) => m.rank === position);
-            if (!member) return null;
+        {activeTab === 'amaliyotlar' && (
+          <motion.div
+            key="amaliyotlar"
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -8 }}
+            className="space-y-5"
+          >
+            <ActivityChart
+              title="Amaliyotlar grafigi"
+              subtitle="Tanlangan davr bo'yicha kunlik bajarilganlar"
+              bars={getHabitDailyBars(practices, history, dateFilter, 'practice')}
+              accent={chartAccent}
+              emptyLabel="Tanlangan davrda amaliyot yo'q"
+            />
+            <div>
+              <h3 className="mb-3 text-sm font-bold text-slate-300">Jadval</h3>
+              <StatsTable
+                rows={getHabitStatRows(practices, history, dateFilter, 'practice')}
+                variant="practice"
+                emptyLabel="Amaliyotlar mavjud emas"
+              />
+            </div>
+          </motion.div>
+        )}
 
-            return (
-              <motion.div
-                key={position}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.6 + position * 0.1 }}
-                className="flex flex-col items-center"
-              >
-                <motion.div
-                  animate={{ y: [-5, 5, -5] }}
-                  transition={{ duration: 2, repeat: Infinity }}
-                  className="text-4xl md:text-5xl mb-3"
-                >
-                  {getMedalEmoji(position)}
-                </motion.div>
+        {activeTab === 'indikatorlar' && (
+          <motion.div
+            key="indikatorlar"
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -8 }}
+            className="space-y-5"
+          >
+            <ActivityChart
+              title="Indikatorlar grafigi"
+              subtitle="Tanlangan davr bo'yicha kunlik kiritilganlar"
+              bars={getHabitDailyBars(indicators, history, dateFilter, 'indicator')}
+              accent={chartAccent}
+              emptyLabel="Tanlangan davrda indikator yo'q"
+            />
+            <div>
+              <h3 className="mb-3 text-sm font-bold text-slate-300">Jadval</h3>
+              <StatsTable
+                rows={getHabitStatRows(indicators, history, dateFilter, 'indicator')}
+                variant="indicator"
+                emptyLabel="Indikatorlar mavjud emas"
+              />
+            </div>
+          </motion.div>
+        )}
 
-                <div
-                  className={`${getPodiumHeight(position)} w-16 sm:w-20 md:w-28 bg-gradient-to-b ${getMedalColor(
-                    position
-                  )} rounded-t-lg border-2 border-slate-600 flex flex-col items-center justify-end pb-2 sm:pb-3 md:pb-4`}
-                >
-                  <p className="text-xl sm:text-2xl md:text-3xl font-bold">{position}</p>
-                </div>
-
-                <div className="text-center mt-3 sm:mt-4 w-16 sm:w-20 md:w-28">
-                  <p className="text-sm md:text-base font-semibold truncate">{member.name}</p>
-                  <p className="text-xs md:text-sm text-slate-400">{member.level}-daraja</p>
-                  <p className="text-xs text-blue-400 font-bold">{member.xp} XP</p>
-                </div>
-              </motion.div>
-            );
-          })}
-          </div>
-
-        <div className="space-y-2 md:space-y-3">
-          {remainingLeaderboard.map((member, index) => (
-            <motion.div
-              key={member.rank}
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.8 + index * 0.05 }}
-              className={`flex items-center justify-between p-3 md:p-4 rounded-lg transition-all gap-2 ${
-                member.name === userData.name
-                  ? 'bg-gradient-to-r from-blue-500/20 to-purple-600/20 border border-blue-500/50'
-                  : 'bg-slate-700/50 hover:bg-slate-700'
-              }`}
-            >
-              <div className="flex items-center gap-2 md:gap-4 min-w-0">
-                <span className="text-lg md:text-xl font-bold text-slate-500 flex-shrink-0 w-6 md:w-8">
-                  {member.rank}
-                </span>
-                <div className="min-w-0">
-                  <p className="font-semibold text-sm md:text-base truncate">{member.name}</p>
-                  <p className="text-xs md:text-sm text-slate-400">{member.level}-daraja</p>
-                </div>
-              </div>
-              <p className="font-bold text-blue-400 text-sm md:text-base flex-shrink-0">
-                {member.xp} XP
-              </p>
-            </motion.div>
-          ))}
-        </div>
-        </div>
-      </motion.div>
+        {activeTab === 'dominantalar' && (
+          <motion.div
+            key="dominantalar"
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -8 }}
+            className="space-y-5"
+          >
+            <ActivityChart
+              title="Dominantalar grafigi"
+              subtitle="Har bir dominanta bo'yicha yakunlangan sessiyalar"
+              bars={getDominantBars(dominants)}
+              accent={chartAccent}
+              emptyLabel="Dominantalar mavjud emas"
+            />
+            <div>
+              <h3 className="mb-3 text-sm font-bold text-slate-300">Jadval</h3>
+              <StatsTable
+                rows={getDominantStatRows(dominants)}
+                variant="dominant"
+                emptyLabel="Dominantalar mavjud emas"
+              />
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </PageContainer>
+  );
+}
+
+export default function Statistics() {
+  return (
+    <Suspense
+      fallback={
+        <PageContainer>
+          <div className="h-40 animate-pulse rounded-xl bg-slate-800/50" />
+        </PageContainer>
+      }
+    >
+      <StatisticsContent />
+    </Suspense>
   );
 }

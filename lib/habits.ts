@@ -1,4 +1,5 @@
 import type { GoodHabit, HabitHistoryEntry } from './types';
+import { isIndicator, isPractice } from './indicators';
 import {
   formatUzbekDateFromKey,
   formatUzbekDateTime,
@@ -111,6 +112,146 @@ export function todayKey(): string {
   return getLocalDateKey();
 }
 
+export function daysAgoKey(days: number): string {
+  const date = new Date();
+  date.setDate(date.getDate() - days);
+  return getLocalDateKey(date);
+}
+
+const DATE_KEY_PATTERN = /^\d{4}-\d{2}-\d{2}$/;
+
+export type ArchiveDateFilter =
+  | { mode: 'day'; date: string }
+  | { mode: 'range'; from: string; to: string };
+
+export function getDefaultArchiveDateFilter(): ArchiveDateFilter {
+  return {
+    mode: 'range',
+    from: daysAgoKey(6),
+    to: todayKey(),
+  };
+}
+
+export function clampDateKey(dateKey: string): string {
+  const today = todayKey();
+  return dateKey > today ? today : dateKey;
+}
+
+export function normalizeArchiveDateFilter(filter: ArchiveDateFilter): ArchiveDateFilter {
+  if (filter.mode === 'day') {
+    return { mode: 'day', date: clampDateKey(filter.date) };
+  }
+
+  let from = clampDateKey(filter.from);
+  let to = clampDateKey(filter.to);
+  if (from > to) {
+    [from, to] = [to, from];
+  }
+
+  return { mode: 'range', from, to };
+}
+
+export function parseArchiveDateFilter(
+  value: string | null,
+  history: HabitHistoryEntry[] = []
+): ArchiveDateFilter {
+  if (!value) return getDefaultArchiveDateFilter();
+
+  if (value.includes('_')) {
+    const [from, to] = value.split('_');
+    if (DATE_KEY_PATTERN.test(from) && DATE_KEY_PATTERN.test(to)) {
+      return normalizeArchiveDateFilter({ mode: 'range', from, to });
+    }
+  }
+
+  if (DATE_KEY_PATTERN.test(value)) {
+    return normalizeArchiveDateFilter({ mode: 'day', date: value });
+  }
+
+  switch (value) {
+    case '1d':
+      return { mode: 'day', date: todayKey() };
+    case '7d':
+      return normalizeArchiveDateFilter({
+        mode: 'range',
+        from: daysAgoKey(6),
+        to: todayKey(),
+      });
+    case '15d':
+      return normalizeArchiveDateFilter({
+        mode: 'range',
+        from: daysAgoKey(14),
+        to: todayKey(),
+      });
+    case '30d':
+      return normalizeArchiveDateFilter({
+        mode: 'range',
+        from: daysAgoKey(29),
+        to: todayKey(),
+      });
+    case 'all': {
+      const dates = history.map((entry) => entry.date);
+      const from = dates.length > 0 ? dates.sort()[0]! : todayKey();
+      return normalizeArchiveDateFilter({ mode: 'range', from, to: todayKey() });
+    }
+    default:
+      return getDefaultArchiveDateFilter();
+  }
+}
+
+export function serializeArchiveDateFilter(filter: ArchiveDateFilter): string {
+  const normalized = normalizeArchiveDateFilter(filter);
+  if (normalized.mode === 'day') return normalized.date;
+  return `${normalized.from}_${normalized.to}`;
+}
+
+export function getArchiveFilterDateKeys(filter: ArchiveDateFilter): string[] {
+  const normalized = normalizeArchiveDateFilter(filter);
+
+  if (normalized.mode === 'day') {
+    return [normalized.date];
+  }
+
+  const dates: string[] = [];
+  const cursor = new Date(`${normalized.from}T12:00:00`);
+  const end = new Date(`${normalized.to}T12:00:00`);
+
+  while (cursor <= end) {
+    dates.push(getLocalDateKey(cursor));
+    cursor.setDate(cursor.getDate() + 1);
+  }
+
+  return dates.sort((a, b) => b.localeCompare(a));
+}
+
+export function getArchiveFilterDateSet(filter: ArchiveDateFilter): Set<string> {
+  return new Set(getArchiveFilterDateKeys(filter));
+}
+
+export function filterHistoryByArchiveFilter(
+  history: HabitHistoryEntry[],
+  filter: ArchiveDateFilter
+): HabitHistoryEntry[] {
+  const range = getArchiveFilterDateSet(filter);
+  return history.filter((entry) => range.has(entry.date));
+}
+
+export function getArchiveFilterLabel(filter: ArchiveDateFilter): string {
+  const normalized = normalizeArchiveDateFilter(filter);
+
+  if (normalized.mode === 'day') {
+    return formatArchiveDate(normalized.date);
+  }
+
+  if (normalized.from === normalized.to) {
+    return formatArchiveDate(normalized.from);
+  }
+
+  const fromLabel = formatUzbekDateFromKey(normalized.from, { weekday: false });
+  const toLabel = formatUzbekDateFromKey(normalized.to, { weekday: false });
+  return `${fromLabel} — ${toLabel}`;
+}
+
 export function formatArchiveDate(dateKey: string): string {
   const full = formatUzbekDateFromKey(dateKey);
 
@@ -147,57 +288,70 @@ export interface ArchiveDayItem {
   status: 'completed' | 'missed';
   completedAt?: string;
   date: string;
+  kind?: GoodHabit['kind'];
+  valueLabel?: string;
 }
 
 export function getPeriodDateList(
   period: HistoryPeriod,
   history: HabitHistoryEntry[]
 ): string[] {
-  const dayCount = getPeriodDayCount(period);
-  if (dayCount !== null) {
-    const dates: string[] = [];
-    const today = new Date();
-    for (let i = 0; i < dayCount; i++) {
-      const d = new Date(today);
-      d.setDate(d.getDate() - i);
-      dates.push(getLocalDateKey(d));
-    }
-    return dates;
-  }
+  return getArchiveFilterDateKeys(legacyPeriodToFilter(period, history));
+}
 
-  const dates = new Set<string>(history.map((entry) => entry.date));
-  dates.add(todayKey());
-  return Array.from(dates).sort((a, b) => b.localeCompare(a));
+function legacyPeriodToFilter(
+  period: HistoryPeriod,
+  history: HabitHistoryEntry[]
+): ArchiveDateFilter {
+  return parseArchiveDateFilter(period, history);
 }
 
 export function buildArchiveDays(
   habits: GoodHabit[],
   history: HabitHistoryEntry[],
-  period: HistoryPeriod
+  filter: ArchiveDateFilter,
+  kind?: 'practice' | 'indicator'
 ): { date: string; items: ArchiveDayItem[] }[] {
-  if (habits.length === 0) return [];
+  const filteredHabits = kind
+    ? habits.filter((habit) =>
+        kind === 'indicator' ? isIndicator(habit) : isPractice(habit)
+      )
+    : habits;
 
-  return getPeriodDateList(period, history).map((date) => {
-    const completedEntries = history.filter((entry) => entry.date === date);
-    const completedIds = new Set(completedEntries.map((entry) => entry.habitId));
+  if (filteredHabits.length === 0) return [];
 
-    const completedItems: ArchiveDayItem[] = completedEntries.map((entry) => ({
+  const habitIds = new Set(filteredHabits.map((habit) => habit.id));
+
+  return getArchiveFilterDateKeys(filter).map((date) => {
+    const dayEntries = history.filter(
+      (entry) =>
+        entry.date === date &&
+        habitIds.has(entry.habitId) &&
+        (!kind || (entry.kind ?? 'practice') === kind)
+    );
+    const loggedIds = new Set(dayEntries.map((entry) => entry.habitId));
+
+    const completedItems: ArchiveDayItem[] = dayEntries.map((entry) => ({
       id: entry.id,
       habitId: entry.habitId,
       habitName: entry.habitName,
       status: 'completed',
       completedAt: entry.completedAt,
       date,
+      kind: entry.kind ?? 'practice',
+      valueLabel: entry.valueLabel,
     }));
 
-    const missedItems: ArchiveDayItem[] = habits
-      .filter((habit) => !completedIds.has(habit.id))
+    const missedItems: ArchiveDayItem[] = filteredHabits
+      .filter((habit) => !loggedIds.has(habit.id))
       .map((habit) => ({
         id: `missed_${habit.id}_${date}`,
         habitId: habit.id,
         habitName: habit.name,
         status: 'missed',
         date,
+        kind: habit.kind ?? 'practice',
+        valueLabel: isIndicator(habit) ? 'Kiritilmagan' : undefined,
       }));
 
     return {
@@ -217,6 +371,7 @@ export function generateSeedHistory(habits: GoodHabit[]): HabitHistoryEntry[] {
   const entries: HabitHistoryEntry[] = [];
 
   for (const habit of habits) {
+    if (!isPractice(habit)) continue;
     if (habit.streak === 0 && !habit.completedToday) continue;
 
     const daysToLog = habit.completedToday ? habit.streak : habit.streak;
@@ -231,6 +386,7 @@ export function generateSeedHistory(habits: GoodHabit[]): HabitHistoryEntry[] {
         habitName: habit.name,
         date,
         completedAt: d.toISOString(),
+        kind: 'practice',
       });
     }
   }
@@ -255,6 +411,7 @@ export function addHistoryEntry(
       habitName: habit.name,
       date,
       completedAt: new Date().toISOString(),
+      kind: 'practice',
     },
     ...withoutToday,
   ];

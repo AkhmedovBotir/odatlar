@@ -48,7 +48,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
       <div className="flex flex-col flex-1 min-w-0">
         <TopNav showBack={isSubPage} />
 
-        <div className="flex-1 overflow-y-auto">
+        <div className="flex-1 overflow-y-auto overscroll-contain">
           <motion.div
             key={pathname}
             initial={{ opacity: 0, y: 8 }}
@@ -58,9 +58,9 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
             {children}
           </motion.div>
         </div>
-
-        <BottomNav />
       </div>
+
+      <BottomNav />
 
       <div className="fixed inset-0 pointer-events-none overflow-hidden">
         {rewards.map((reward) => (

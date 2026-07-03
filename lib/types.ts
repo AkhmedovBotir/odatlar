@@ -1,9 +1,18 @@
+export type HabitKind = 'practice' | 'indicator';
+
+export interface IndicatorConfig {
+  unit?: string;
+}
+
 export interface GoodHabit {
   id: string;
   name: string;
   benefits: string[];
+  kind?: HabitKind;
   completedToday: boolean;
   streak: number;
+  indicatorConfig?: IndicatorConfig;
+  todayIndicatorValue?: string | null;
 }
 
 export interface HabitHistoryEntry {
@@ -12,6 +21,11 @@ export interface HabitHistoryEntry {
   habitName: string;
   date: string;
   completedAt: string;
+  kind?: HabitKind;
+  valueLabel?: string;
+  valueId?: string;
+  numericValue?: number;
+  isEmpty?: boolean;
 }
 
 export interface Dominant {

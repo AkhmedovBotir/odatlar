@@ -170,8 +170,7 @@
 
 @layer utilities {
   .page-content {
-    @apply p-4 md:p-8 lg:p-10 max-w-6xl xl:max-w-7xl mx-auto min-h-0;
-    padding-bottom: calc(6.25rem + env(safe-area-inset-bottom, 0px));
+    @apply px-4 pt-4 pb-[calc(6.25rem+env(safe-area-inset-bottom,0px))] md:px-8 md:pt-5 lg:px-10 lg:pt-6 max-w-6xl xl:max-w-7xl mx-auto min-h-0;
   }
 
   @media (min-width: 1024px) {
@@ -181,7 +180,7 @@
   }
 
   .safe-top {
-    padding-top: env(safe-area-inset-top, 0px);
+    padding-top: calc(env(safe-area-inset-top, 0px) + 0.75rem);
   }
 
   .safe-bottom {

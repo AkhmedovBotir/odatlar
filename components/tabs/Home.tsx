@@ -6,7 +6,9 @@ import { motion } from 'framer-motion';
 import { CheckCircle2 } from 'lucide-react';
 import { useUserData } from '@/components/UserDataProvider';
 import PageContainer from '@/components/PageContainer';
+import UserProfileCard from '@/components/profile/UserProfileCard';
 import { getBestStreak } from '@/lib/gamification';
+import { getPractices } from '@/lib/indicators';
 
 const motivationalMessages = [
   'Bugun o\'zingizni yangi darajaga ko\'taring! 🚀',
@@ -33,9 +35,10 @@ export default function Home() {
     return 'Xayrli oqshom';
   };
 
-  const completedToday = userData.goodHabits.filter((h) => h.completedToday).length;
-  const totalHabits = userData.goodHabits.length;
-  const currentStreak = getBestStreak(userData.goodHabits);
+  const practices = getPractices(userData.goodHabits);
+  const completedToday = practices.filter((h) => h.completedToday).length;
+  const totalHabits = practices.length;
+  const currentStreak = getBestStreak(practices);
   const completionPercentage = totalHabits > 0 ? Math.round((completedToday / totalHabits) * 100) : 0;
 
   return (
@@ -57,6 +60,8 @@ export default function Home() {
           {motivationalMessage}
         </motion.p>
       </div>
+
+      <UserProfileCard userData={userData} />
 
       <div className="grid grid-cols-1 min-[420px]:grid-cols-3 gap-3 md:gap-4 lg:gap-6 mb-8">
         <motion.div
@@ -103,7 +108,7 @@ export default function Home() {
           </Link>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4 lg:gap-6">
-          {userData.goodHabits.slice(0, 4).map((habit, idx) => (
+          {practices.slice(0, 4).map((habit, idx) => (
             <Link key={habit.id} href="/odatlar">
               <motion.div
                 initial={{ opacity: 0, x: -20 }}

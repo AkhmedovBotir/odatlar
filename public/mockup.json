@@ -9,15 +9,9 @@
   },
   "goodHabits": [
     {
-      "id": "kitob_oqish",
-      "name": "Kitob o'qish",
-      "benefits": ["Sog'liq uchun foyda", "Yangi ma'lumotlar", "Diqqat rivojlanadi"],
-      "completedToday": false,
-      "streak": 3
-    },
-    {
       "id": "rejalashtirish",
       "name": "Rejalashtirish",
+      "kind": "practice",
       "benefits": ["Stress kamayadi", "Ko'proq ishlarga ulgurasiz", "Hayotingizda ma'no paydo bo'ladi", "Miyangiz yaxshiroq ishlaydi"],
       "completedToday": true,
       "streak": 7
@@ -25,6 +19,7 @@
     {
       "id": "sport",
       "name": "Sport bilan shug'ullanish",
+      "kind": "practice",
       "benefits": ["Sog'liq", "Energiya", "Ko'proq ishlarga ulgurish"],
       "completedToday": false,
       "streak": 0
@@ -32,6 +27,7 @@
     {
       "id": "telefonsiz_uxlash",
       "name": "Telefonsiz uxlash",
+      "kind": "practice",
       "benefits": ["Stress kamayadi", "Zararli odatlardan qutilish osonlashadi", "Uyqu rejimi yaxshilanadi", "Erta turish boshlanadi"],
       "completedToday": false,
       "streak": 4
@@ -39,9 +35,28 @@
     {
       "id": "erta_turish",
       "name": "Erta turish",
+      "kind": "practice",
       "benefits": ["Ko'p ishga ulgurish", "Stress kamayadi", "Self-study ga vaqt ajratish", "Vaqtni befoyda sarflashni bas qilasiz"],
       "completedToday": false,
       "streak": 5
+    },
+    {
+      "id": "ind_kitob",
+      "name": "Kitob o'qish",
+      "kind": "indicator",
+      "benefits": ["Sog'liq uchun foyda", "Yangi ma'lumotlar", "Diqqat rivojlanadi"],
+      "completedToday": false,
+      "streak": 0,
+      "todayIndicatorValue": null
+    },
+    {
+      "id": "ind_uyqu",
+      "name": "Uyqu soatlari",
+      "kind": "indicator",
+      "benefits": ["Energiya tiklanadi", "Sog'liq yaxshilanadi"],
+      "completedToday": false,
+      "streak": 0,
+      "todayIndicatorValue": null
     }
   ],
   "dominants": [

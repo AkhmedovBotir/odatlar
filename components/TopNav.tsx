@@ -5,7 +5,11 @@ import { useRouter, usePathname } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { ArrowLeft, Clock3 } from 'lucide-react';
 import { useUserData } from '@/components/UserDataProvider';
+import NotificationBadge from '@/components/notifications/NotificationBadge';
 import { formatUzbekDate, formatUzbekDateTime, formatUzbekTime } from '@/lib/datetime';
+import { findLesson, findCourse } from '@/lib/guideCourse';
+import { findExternalVideo } from '@/lib/guide';
+import { useNavigation } from '@/components/NavigationProvider';
 
 interface TopNavProps {
   showBack?: boolean;
@@ -15,6 +19,8 @@ const titles: Record<string, string> = {
   '/': 'Bosh sahifa',
   '/statistika': 'Statistika',
   '/odatlar': 'Odatlar',
+  '/qollanma': "Qo'llanma",
+  '/habarlar': 'Habarlar',
   '/dominantalar': 'Dominantalar',
   '/dominantalar/yangi': 'Yangi dominanta',
 };
@@ -24,6 +30,21 @@ function getTitle(pathname: string): string {
   if (pathname.includes('/sessiya')) return 'Mashq sessiyasi';
   if (pathname.includes('/tur')) return 'Mashq usuli';
   if (pathname.match(/^\/dominantalar\/[^/]+$/)) return 'Dominanta mashqi';
+  const lessonMatch = pathname.match(/^\/qollanma\/dars\/([^/]+)$/);
+  if (lessonMatch) {
+    const ctx = findLesson(lessonMatch[1]);
+    if (ctx) return ctx.lesson.title;
+  }
+  const courseMatch = pathname.match(/^\/qollanma\/kurs\/([^/]+)$/);
+  if (courseMatch) {
+    const course = findCourse(courseMatch[1]);
+    if (course) return course.title;
+  }
+  const videoMatch = pathname.match(/^\/qollanma\/video\/([^/]+)$/);
+  if (videoMatch) {
+    const video = findExternalVideo(videoMatch[1]);
+    if (video) return video.title;
+  }
   return 'Odatlar Klub';
 }
 
@@ -31,6 +52,7 @@ export default function TopNav({ showBack = false }: TopNavProps) {
   const router = useRouter();
   const pathname = usePathname();
   const { showHabitModal, setShowHabitModal } = useUserData();
+  const { startNavigation } = useNavigation();
   const [now, setNow] = useState(() => new Date());
 
   useEffect(() => {
@@ -43,6 +65,8 @@ export default function TopNav({ showBack = false }: TopNavProps) {
       setShowHabitModal(false);
       return;
     }
+
+    startNavigation();
 
     if (pathname.includes('/sessiya')) {
       router.push(pathname.replace('/sessiya', '/tur'));
@@ -63,6 +87,20 @@ export default function TopNav({ showBack = false }: TopNavProps) {
     }
     if (pathname.match(/^\/dominantalar\/[^/]+$/)) {
       router.push('/dominantalar');
+      return;
+    }
+    if (pathname.startsWith('/qollanma/dars/')) {
+      const lessonId = pathname.split('/').pop();
+      const ctx = lessonId ? findLesson(lessonId) : null;
+      router.push(ctx ? `/qollanma/kurs/${ctx.course.id}` : '/qollanma?tab=kurslar');
+      return;
+    }
+    if (pathname.startsWith('/qollanma/kurs/')) {
+      router.push('/qollanma?tab=kurslar');
+      return;
+    }
+    if (pathname.startsWith('/qollanma/video/')) {
+      router.push('/qollanma');
       return;
     }
     router.back();
@@ -100,6 +138,8 @@ export default function TopNav({ showBack = false }: TopNavProps) {
               {title}
             </h1>
 
+            <NotificationBadge />
+
             <div className="flex items-center gap-1.5 flex-shrink-0 rounded-xl bg-slate-800/80 border border-slate-700/60 px-2.5 py-1.5">
               <Clock3 className="w-3.5 h-3.5 text-blue-400/80 hidden min-[360px]:block" />
               <div className="text-right leading-tight">
@@ -131,11 +171,14 @@ export default function TopNav({ showBack = false }: TopNavProps) {
             <h1 className="text-2xl xl:text-3xl font-bold truncate">{title}</h1>
           </div>
 
-          <div className="flex items-center gap-2 rounded-xl bg-slate-800/60 border border-slate-700/50 px-4 py-2">
+          <div className="flex items-center gap-2">
+            <NotificationBadge />
+            <div className="flex items-center gap-2 rounded-xl bg-slate-800/60 border border-slate-700/50 px-4 py-2">
             <Clock3 className="w-4 h-4 text-blue-400/80 flex-shrink-0" />
             <p className="text-sm text-slate-300 tabular-nums whitespace-nowrap">
               {formatUzbekDateTime(now, { weekday: 'long', withSeconds: true })}
             </p>
+          </div>
           </div>
         </div>
       </div>

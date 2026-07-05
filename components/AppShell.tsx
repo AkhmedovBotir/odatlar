@@ -6,6 +6,7 @@ import TopNav from '@/components/TopNav';
 import BottomNav from '@/components/BottomNav';
 import SideNav from '@/components/SideNav';
 import RewardFloating from '@/components/RewardFloating';
+import NavigationLoader from '@/components/NavigationLoader';
 import { useUserData } from '@/components/UserDataProvider';
 
 export default function AppShell({ children }: { children: React.ReactNode }) {
@@ -39,7 +40,10 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
   }
 
   const isSubPage =
-    pathname.startsWith('/dominantalar/') && pathname !== '/dominantalar';
+    (pathname.startsWith('/dominantalar/') && pathname !== '/dominantalar') ||
+    pathname.startsWith('/qollanma/dars/') ||
+    pathname.startsWith('/qollanma/kurs/') ||
+    pathname.startsWith('/qollanma/video/');
 
   return (
     <div className="w-full h-dvh min-h-dvh bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white overflow-hidden flex">
@@ -48,7 +52,8 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
       <div className="flex flex-col flex-1 min-w-0">
         <TopNav showBack={isSubPage} />
 
-        <div className="flex-1 overflow-y-auto overscroll-contain">
+        <div className="relative flex-1 overflow-y-auto overscroll-contain">
+          <NavigationLoader />
           <motion.div
             key={pathname}
             initial={{ opacity: 0, y: 8 }}

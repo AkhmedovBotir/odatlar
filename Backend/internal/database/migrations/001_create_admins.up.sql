@@ -1,0 +1,24 @@
+CREATE TABLE IF NOT EXISTS admins (
+    id            BIGSERIAL PRIMARY KEY,
+    first_name    VARCHAR(100) NOT NULL,
+    last_name     VARCHAR(100) NOT NULL,
+    phone         VARCHAR(20)  NOT NULL,
+    username      VARCHAR(50)  NOT NULL,
+    password_hash VARCHAR(255) NOT NULL,
+    status        VARCHAR(20)  NOT NULL DEFAULT 'active' CHECK (status IN ('active', 'inactive')),
+    created_at    TIMESTAMPTZ  NOT NULL DEFAULT NOW(),
+    updated_at    TIMESTAMPTZ  NOT NULL DEFAULT NOW()
+);
+
+ALTER TABLE admins ADD COLUMN IF NOT EXISTS first_name    VARCHAR(100) NOT NULL DEFAULT '';
+ALTER TABLE admins ADD COLUMN IF NOT EXISTS last_name     VARCHAR(100) NOT NULL DEFAULT '';
+ALTER TABLE admins ADD COLUMN IF NOT EXISTS phone         VARCHAR(20)  NOT NULL DEFAULT '';
+ALTER TABLE admins ADD COLUMN IF NOT EXISTS username      VARCHAR(50)  NOT NULL DEFAULT '';
+ALTER TABLE admins ADD COLUMN IF NOT EXISTS password_hash VARCHAR(255) NOT NULL DEFAULT '';
+ALTER TABLE admins ADD COLUMN IF NOT EXISTS status        VARCHAR(20)  NOT NULL DEFAULT 'active';
+ALTER TABLE admins ADD COLUMN IF NOT EXISTS created_at    TIMESTAMPTZ  NOT NULL DEFAULT NOW();
+ALTER TABLE admins ADD COLUMN IF NOT EXISTS updated_at    TIMESTAMPTZ  NOT NULL DEFAULT NOW();
+
+CREATE UNIQUE INDEX IF NOT EXISTS idx_admins_phone ON admins(phone);
+CREATE UNIQUE INDEX IF NOT EXISTS idx_admins_username ON admins(username);
+CREATE INDEX IF NOT EXISTS idx_admins_status ON admins(status);

@@ -1,12 +1,13 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { BookOpen } from 'lucide-react';
 import PageContainer from '@/components/PageContainer';
 import CourseDetailView from '@/components/qollanma/CourseDetailView';
-import { countLessons, findCourse, isSection } from '@/lib/guideCourse';
+import { fetchGuideCourse } from '@/lib/coursesApi';
+import { countLessons, isSection, type Course } from '@/lib/guideCourse';
 
 interface CourseDetailProps {
   courseId: string;
@@ -14,13 +15,33 @@ interface CourseDetailProps {
 
 export default function CourseDetail({ courseId }: CourseDetailProps) {
   const router = useRouter();
-  const course = findCourse(courseId);
+  const [course, setCourse] = useState<Course | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  const loadRemote = useCallback(async () => {
+    setLoading(true);
+    try {
+      const remote = await fetchGuideCourse(courseId);
+      setCourse(remote);
+    } catch (error) {
+      console.error('[CourseDetail] kurs yuklash xatosi', error);
+      router.replace('/qollanma?tab=kurslar');
+    } finally {
+      setLoading(false);
+    }
+  }, [courseId, router]);
 
   useEffect(() => {
-    if (!course) {
-      router.replace('/qollanma?tab=kurslar');
-    }
-  }, [course, router]);
+    loadRemote();
+  }, [loadRemote]);
+
+  if (loading) {
+    return (
+      <PageContainer>
+        <div className="h-48 animate-pulse rounded-2xl bg-slate-800/50" />
+      </PageContainer>
+    );
+  }
 
   if (!course) return null;
 

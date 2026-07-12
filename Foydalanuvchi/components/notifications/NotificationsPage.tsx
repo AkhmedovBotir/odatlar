@@ -95,7 +95,7 @@ function NotificationRow({
 }
 
 export default function NotificationsPage() {
-  const { notifications, isRead, markRead, markAllRead, unreadCount } = useNotifications();
+  const { notifications, isRead, markRead, markAllRead, unreadCount, loading } = useNotifications();
   const [selected, setSelected] = useState<Notification | null>(null);
 
   const sorted = [...notifications].sort(
@@ -108,6 +108,18 @@ export default function NotificationsPage() {
   };
 
   const handleClose = () => setSelected(null);
+
+  if (loading) {
+    return (
+      <PageContainer>
+        <div className="space-y-2">
+          {[0, 1, 2, 3].map((i) => (
+            <div key={i} className="h-20 animate-pulse rounded-2xl bg-slate-800/50" />
+          ))}
+        </div>
+      </PageContainer>
+    );
+  }
 
   return (
     <PageContainer>

@@ -1,0 +1,16 @@
+ODATLAR BOSHLANg'ICH QO'LLANMA
+=============================
+
+1. Amaliyot qo'shish
+   - Odatlar sahifasida + tugmasini bosing
+   - Odat nomi va foydalarini kiriting
+   - Har kuni bajarilganda belgilang
+
+2. Indikator qo'shish
+   - Indikatorlar tabiga o'ting
+   - O'lchanadigan ko'rsatkich yarating (masalan: o'qilgan soatlar)
+   - Kun oxirida qiymatni kiriting
+
+3. Arxiv
+   - Oldingi kunlardagi natijalarni ko'ring
+   - Sana filtri bilan qidiruv qiling

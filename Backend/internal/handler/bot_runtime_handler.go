@@ -81,7 +81,7 @@ func (h *BotRuntimeHandler) RegisterStart(c *gin.Context) {
 // @Description  WebApp ichidan foydalanuvchi ma'lumotini saqlaydi/yangilaydi (Telegram initData kerak)
 // @Tags         Bot Runtime
 // @Produce      json
-// @Security     BotToken
+// @Security     TelegramInitData
 // @Success      200   {object}  dto.BotUserResponse
 // @Failure      401   {object}  response.ErrorBody
 // @Failure      500   {object}  response.ErrorBody
@@ -107,7 +107,7 @@ func (h *BotRuntimeHandler) RegisterWebAppOpen(c *gin.Context) {
 // @Description  Telegram initData orqali joriy foydalanuvchi ma'lumotini qaytaradi
 // @Tags         Bot Runtime
 // @Produce      json
-// @Security     BotToken
+// @Security     TelegramInitData
 // @Success      200   {object}  dto.BotUserResponse
 // @Failure      401   {object}  response.ErrorBody
 // @Failure      404   {object}  response.ErrorBody

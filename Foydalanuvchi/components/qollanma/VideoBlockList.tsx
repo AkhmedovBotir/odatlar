@@ -1,10 +1,12 @@
 'use client';
 
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
-import { ChevronRight, Clock3, PlayCircle, Video } from 'lucide-react';
-import { externalVideos, videoHref, type ExternalVideo } from '@/lib/guide';
+import { ChevronRight, Clock3, Heart, MessageCircle, PlayCircle, Video } from 'lucide-react';
+import { videoHref, type ExternalVideo } from '@/lib/guide';
+import { fetchGuideVideos } from '@/lib/guidesApi';
 
 function VideoBlockCard({ video, index }: { video: ExternalVideo; index: number }) {
   return (
@@ -25,6 +27,7 @@ function VideoBlockCard({ video, index }: { video: ExternalVideo; index: number 
               fill
               className="object-cover opacity-80 transition-opacity group-hover:opacity-60"
               sizes="(max-width: 768px) 100vw, 640px"
+              unoptimized={video.poster.startsWith('http')}
             />
           ) : (
             <div className="absolute inset-0 bg-gradient-to-br from-slate-800 to-slate-900" />
@@ -49,12 +52,26 @@ function VideoBlockCard({ video, index }: { video: ExternalVideo; index: number 
               <p className="mt-1 line-clamp-2 text-sm leading-relaxed text-slate-400">
                 {video.description}
               </p>
-              {video.durationMin && (
-                <p className="mt-2 inline-flex items-center gap-1 text-xs text-slate-500">
-                  <Clock3 className="h-3.5 w-3.5" />
-                  {video.durationMin} daqiqa
-                </p>
-              )}
+              <div className="mt-2 flex flex-wrap items-center gap-3 text-xs text-slate-500">
+                {video.durationMin ? (
+                  <span className="inline-flex items-center gap-1">
+                    <Clock3 className="h-3.5 w-3.5" />
+                    {video.durationMin} daqiqa
+                  </span>
+                ) : null}
+                {(video.likesCount ?? 0) > 0 && (
+                  <span className="inline-flex items-center gap-1">
+                    <Heart className="h-3.5 w-3.5" />
+                    {video.likesCount}
+                  </span>
+                )}
+                {(video.commentsCount ?? 0) > 0 && (
+                  <span className="inline-flex items-center gap-1">
+                    <MessageCircle className="h-3.5 w-3.5" />
+                    {video.commentsCount}
+                  </span>
+                )}
+              </div>
             </div>
             <ChevronRight className="mt-1 h-5 w-5 flex-shrink-0 text-slate-600 transition-transform group-hover:translate-x-0.5 group-hover:text-violet-400" />
           </div>
@@ -65,9 +82,50 @@ function VideoBlockCard({ video, index }: { video: ExternalVideo; index: number 
 }
 
 export default function VideoBlockList() {
+  const [videos, setVideos] = useState<ExternalVideo[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    let active = true;
+
+    fetchGuideVideos()
+      .then((data) => {
+        if (!active) return;
+        setVideos(data);
+      })
+      .catch((error) => {
+        console.error('[VideoBlockList] videolar yuklash xatosi', error);
+      })
+      .finally(() => {
+        if (active) setLoading(false);
+      });
+
+    return () => {
+      active = false;
+    };
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="space-y-3">
+        {[0, 1].map((i) => (
+          <div key={i} className="h-52 animate-pulse rounded-2xl bg-slate-800/50" />
+        ))}
+      </div>
+    );
+  }
+
+  if (videos.length === 0) {
+    return (
+      <div className="rounded-2xl border border-slate-700/60 bg-slate-900/60 p-6 text-center text-sm text-slate-400">
+        Hozircha videolar mavjud emas
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-3">
-      {externalVideos.map((video, index) => (
+      {videos.map((video, index) => (
         <VideoBlockCard key={video.id} video={video} index={index} />
       ))}
     </div>

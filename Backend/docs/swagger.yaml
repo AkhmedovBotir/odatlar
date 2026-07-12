@@ -8,6 +8,43 @@ definitions:
     x-enum-varnames:
     - AdminStatusActive
     - AdminStatusInactive
+  github_com_odatlar-bot_backend_internal_dto.AdminActivityStats:
+    properties:
+      entries_today:
+        type: integer
+      total_entries:
+        type: integer
+      total_items:
+        type: integer
+    type: object
+  github_com_odatlar-bot_backend_internal_dto.AdminLeaderboardEntry:
+    properties:
+      bot_user_id:
+        type: integer
+      level:
+        type: integer
+      name:
+        type: string
+      rank:
+        type: integer
+      telegram_id:
+        type: integer
+      username:
+        type: string
+      xp:
+        type: integer
+    type: object
+  github_com_odatlar-bot_backend_internal_dto.AdminLeaderboardResponse:
+    properties:
+      data:
+        items:
+          $ref: '#/definitions/github_com_odatlar-bot_backend_internal_dto.AdminLeaderboardEntry'
+        type: array
+      limit:
+        type: integer
+      total:
+        type: integer
+    type: object
   github_com_odatlar-bot_backend_internal_dto.AdminListResponse:
     properties:
       data:
@@ -28,7 +65,7 @@ definitions:
       first_name:
         type: string
       id:
-        type: integer
+        type: string
       last_name:
         type: string
       phone:
@@ -39,6 +76,231 @@ definitions:
         type: string
       username:
         type: string
+    type: object
+  github_com_odatlar-bot_backend_internal_dto.AdminStatsResponse:
+    properties:
+      dominants:
+        $ref: '#/definitions/github_com_odatlar-bot_backend_internal_dto.AdminActivityStats'
+      generated_at:
+        type: string
+      indicators:
+        $ref: '#/definitions/github_com_odatlar-bot_backend_internal_dto.AdminActivityStats'
+      practices:
+        $ref: '#/definitions/github_com_odatlar-bot_backend_internal_dto.AdminActivityStats'
+      users:
+        $ref: '#/definitions/github_com_odatlar-bot_backend_internal_dto.AdminUserStats'
+      xp:
+        $ref: '#/definitions/github_com_odatlar-bot_backend_internal_dto.AdminXPStats'
+    type: object
+  github_com_odatlar-bot_backend_internal_dto.AdminUserStats:
+    properties:
+      active_this_week:
+        type: integer
+      new_this_week:
+        type: integer
+      new_today:
+        type: integer
+      premium:
+        type: integer
+      total:
+        type: integer
+      with_phone:
+        type: integer
+    type: object
+  github_com_odatlar-bot_backend_internal_dto.AdminXPStats:
+    properties:
+      avg_level:
+        type: number
+      avg_xp:
+        type: number
+      level_up_xp:
+        type: integer
+      max_level:
+        type: integer
+      max_xp:
+        type: integer
+      total_xp:
+        type: integer
+    type: object
+  github_com_odatlar-bot_backend_internal_dto.ArchiveDayItemResponse:
+    properties:
+      completedAt:
+        type: string
+      date:
+        type: string
+      habitId:
+        type: string
+      habitName:
+        type: string
+      id:
+        type: string
+      kind:
+        type: string
+      status:
+        type: string
+      valueLabel:
+        type: string
+    type: object
+  github_com_odatlar-bot_backend_internal_dto.ArchiveDayResponse:
+    properties:
+      date:
+        type: string
+      items:
+        items:
+          $ref: '#/definitions/github_com_odatlar-bot_backend_internal_dto.ArchiveDayItemResponse'
+        type: array
+    type: object
+  github_com_odatlar-bot_backend_internal_dto.ArchiveResponse:
+    properties:
+      completedCount:
+        type: integer
+      days:
+        items:
+          $ref: '#/definitions/github_com_odatlar-bot_backend_internal_dto.ArchiveDayResponse'
+        type: array
+      missedCount:
+        type: integer
+    type: object
+  github_com_odatlar-bot_backend_internal_dto.BotRuntimeConfigResponse:
+    properties:
+      bot_token:
+        type: string
+      bot_username:
+        type: string
+      is_active:
+        type: boolean
+      start:
+        $ref: '#/definitions/github_com_odatlar-bot_backend_internal_dto.BotStartDTO'
+      updated_at:
+        type: string
+    type: object
+  github_com_odatlar-bot_backend_internal_dto.BotSettingsResponse:
+    properties:
+      start:
+        $ref: '#/definitions/github_com_odatlar-bot_backend_internal_dto.BotStartDTO'
+      token:
+        $ref: '#/definitions/github_com_odatlar-bot_backend_internal_dto.BotTokenResponse'
+      updated_at:
+        type: string
+    type: object
+  github_com_odatlar-bot_backend_internal_dto.BotStartDTO:
+    properties:
+      button:
+        $ref: '#/definitions/github_com_odatlar-bot_backend_internal_dto.StartButtonDTO'
+      message:
+        maxLength: 4096
+        type: string
+    required:
+    - message
+    type: object
+  github_com_odatlar-bot_backend_internal_dto.BotStartUserRequest:
+    properties:
+      avatar_url:
+        maxLength: 500
+        type: string
+      first_name:
+        maxLength: 100
+        type: string
+      is_bot:
+        type: boolean
+      is_premium:
+        type: boolean
+      language_code:
+        maxLength: 10
+        type: string
+      last_name:
+        maxLength: 100
+        type: string
+      phone:
+        maxLength: 20
+        type: string
+      telegram_id:
+        type: integer
+      username:
+        maxLength: 100
+        type: string
+    required:
+    - telegram_id
+    type: object
+  github_com_odatlar-bot_backend_internal_dto.BotTokenResponse:
+    properties:
+      bot_username:
+        type: string
+      has_token:
+        type: boolean
+      is_active:
+        type: boolean
+      masked_token:
+        type: string
+    type: object
+  github_com_odatlar-bot_backend_internal_dto.BotUserListResponse:
+    properties:
+      data:
+        items:
+          $ref: '#/definitions/github_com_odatlar-bot_backend_internal_dto.BotUserResponse'
+        type: array
+      limit:
+        type: integer
+      page:
+        type: integer
+      total:
+        type: integer
+    type: object
+  github_com_odatlar-bot_backend_internal_dto.BotUserResponse:
+    properties:
+      avatar_url:
+        type: string
+      first_name:
+        type: string
+      id:
+        type: integer
+      is_bot:
+        type: boolean
+      is_premium:
+        type: boolean
+      language_code:
+        type: string
+      last_name:
+        type: string
+      last_start_at:
+        type: string
+      level:
+        type: integer
+      level_up_xp:
+        type: integer
+      phone:
+        type: string
+      started_at:
+        type: string
+      telegram_id:
+        type: integer
+      username:
+        type: string
+      xp:
+        type: integer
+    type: object
+  github_com_odatlar-bot_backend_internal_dto.CompleteDominantSessionRequest:
+    properties:
+      cons:
+        items:
+          type: string
+        maxItems: 50
+        type: array
+      notes:
+        maxLength: 5000
+        type: string
+      pros:
+        items:
+          type: string
+        maxItems: 50
+        type: array
+      type:
+        enum:
+        - fikrlash
+        - malumot
+        type: string
+    required:
+    - type
     type: object
   github_com_odatlar-bot_backend_internal_dto.CreateAdminRequest:
     properties:
@@ -69,6 +331,511 @@ definitions:
     - phone
     - username
     type: object
+  github_com_odatlar-bot_backend_internal_dto.CreateDominantRequest:
+    properties:
+      cons:
+        items:
+          type: string
+        maxItems: 50
+        type: array
+      cue:
+        maxLength: 1000
+        type: string
+      notes:
+        maxLength: 5000
+        type: string
+      pros:
+        items:
+          type: string
+        maxItems: 50
+        type: array
+      reward:
+        maxLength: 1000
+        type: string
+      title:
+        maxLength: 255
+        minLength: 1
+        type: string
+      type:
+        enum:
+        - fikrlash
+        - malumot
+        type: string
+    required:
+    - title
+    - type
+    type: object
+  github_com_odatlar-bot_backend_internal_dto.CreateGuideCourseRequest:
+    properties:
+      children:
+        items:
+          type: integer
+        type: array
+      description:
+        maxLength: 5000
+        type: string
+      is_published:
+        type: boolean
+      slug:
+        maxLength: 100
+        minLength: 1
+        type: string
+      sort_order:
+        type: integer
+      title:
+        maxLength: 255
+        minLength: 1
+        type: string
+    required:
+    - children
+    - slug
+    - title
+    type: object
+  github_com_odatlar-bot_backend_internal_dto.CreateGuideFileRequest:
+    properties:
+      description:
+        maxLength: 5000
+        type: string
+      ext:
+        maxLength: 20
+        minLength: 1
+        type: string
+      is_published:
+        type: boolean
+      size_bytes:
+        minimum: 0
+        type: integer
+      slug:
+        maxLength: 100
+        minLength: 1
+        type: string
+      sort_order:
+        type: integer
+      title:
+        maxLength: 255
+        minLength: 1
+        type: string
+      url:
+        type: string
+    required:
+    - ext
+    - slug
+    - title
+    - url
+    type: object
+  github_com_odatlar-bot_backend_internal_dto.CreateGuideVideoCommentRequest:
+    properties:
+      text:
+        maxLength: 2000
+        minLength: 1
+        type: string
+    required:
+    - text
+    type: object
+  github_com_odatlar-bot_backend_internal_dto.CreateGuideVideoRequest:
+    properties:
+      description:
+        maxLength: 5000
+        type: string
+      duration_min:
+        minimum: 0
+        type: integer
+      is_published:
+        type: boolean
+      poster:
+        type: string
+      sort_order:
+        type: integer
+      src:
+        type: string
+      title:
+        maxLength: 255
+        minLength: 1
+        type: string
+    required:
+    - src
+    - title
+    type: object
+  github_com_odatlar-bot_backend_internal_dto.CreateIndicatorRequest:
+    properties:
+      benefits:
+        items:
+          type: string
+        maxItems: 20
+        type: array
+      name:
+        maxLength: 255
+        minLength: 1
+        type: string
+    required:
+    - name
+    type: object
+  github_com_odatlar-bot_backend_internal_dto.CreateNotificationRequest:
+    properties:
+      payload:
+        items:
+          type: integer
+        type: array
+      preview:
+        maxLength: 2000
+        type: string
+      target:
+        enum:
+        - all
+        - selected
+        type: string
+      target_user_ids:
+        items:
+          type: integer
+        type: array
+      title:
+        maxLength: 255
+        minLength: 1
+        type: string
+      type:
+        type: string
+    required:
+    - title
+    - type
+    type: object
+  github_com_odatlar-bot_backend_internal_dto.CreatePracticeRequest:
+    properties:
+      benefits:
+        items:
+          type: string
+        maxItems: 20
+        type: array
+      name:
+        maxLength: 255
+        minLength: 1
+        type: string
+    required:
+    - name
+    type: object
+  github_com_odatlar-bot_backend_internal_dto.DominantListResponse:
+    properties:
+      data:
+        items:
+          $ref: '#/definitions/github_com_odatlar-bot_backend_internal_dto.DominantResponse'
+        type: array
+    type: object
+  github_com_odatlar-bot_backend_internal_dto.DominantResponse:
+    properties:
+      cons:
+        items:
+          type: string
+        type: array
+      createdAt:
+        type: string
+      cue:
+        type: string
+      id:
+        type: string
+      level:
+        type: integer
+      notes:
+        type: string
+      pros:
+        items:
+          type: string
+        type: array
+      reward:
+        type: string
+      sessionsCompleted:
+        type: integer
+      title:
+        type: string
+      type:
+        type: string
+      xp:
+        type: integer
+      xp_reward:
+        type: integer
+    type: object
+  github_com_odatlar-bot_backend_internal_dto.GuideCourseBreadcrumbItem:
+    properties:
+      href:
+        type: string
+      id:
+        type: string
+      title:
+        type: string
+    type: object
+  github_com_odatlar-bot_backend_internal_dto.GuideCourseListResponse:
+    properties:
+      data:
+        items:
+          $ref: '#/definitions/github_com_odatlar-bot_backend_internal_dto.GuideCourseResponse'
+        type: array
+    type: object
+  github_com_odatlar-bot_backend_internal_dto.GuideCourseResponse:
+    properties:
+      children:
+        items:
+          type: integer
+        type: array
+      createdAt:
+        type: string
+      description:
+        type: string
+      id:
+        type: string
+      isPublished:
+        type: boolean
+      lessonCount:
+        type: integer
+      sectionCount:
+        type: integer
+      sortOrder:
+        type: integer
+      title:
+        type: string
+      updatedAt:
+        type: string
+    type: object
+  github_com_odatlar-bot_backend_internal_dto.GuideCourseSummary:
+    properties:
+      description:
+        type: string
+      id:
+        type: string
+      title:
+        type: string
+    type: object
+  github_com_odatlar-bot_backend_internal_dto.GuideFileListResponse:
+    properties:
+      data:
+        items:
+          $ref: '#/definitions/github_com_odatlar-bot_backend_internal_dto.GuideFileResponse'
+        type: array
+    type: object
+  github_com_odatlar-bot_backend_internal_dto.GuideFileResponse:
+    properties:
+      createdAt:
+        type: string
+      description:
+        type: string
+      ext:
+        type: string
+      id:
+        type: string
+      isPublished:
+        type: boolean
+      sizeBytes:
+        type: integer
+      sizeLabel:
+        type: string
+      sortOrder:
+        type: integer
+      title:
+        type: string
+      updatedAt:
+        type: string
+      url:
+        type: string
+    type: object
+  github_com_odatlar-bot_backend_internal_dto.GuideLessonResponse:
+    properties:
+      breadcrumb:
+        items:
+          $ref: '#/definitions/github_com_odatlar-bot_backend_internal_dto.GuideCourseBreadcrumbItem'
+        type: array
+      course:
+        $ref: '#/definitions/github_com_odatlar-bot_backend_internal_dto.GuideCourseSummary'
+      lesson:
+        items:
+          type: integer
+        type: array
+    type: object
+  github_com_odatlar-bot_backend_internal_dto.GuideVideoCommentListResponse:
+    properties:
+      data:
+        items:
+          $ref: '#/definitions/github_com_odatlar-bot_backend_internal_dto.GuideVideoCommentResponse'
+        type: array
+    type: object
+  github_com_odatlar-bot_backend_internal_dto.GuideVideoCommentResponse:
+    properties:
+      authorAvatarUrl:
+        type: string
+      authorName:
+        type: string
+      createdAt:
+        type: string
+      id:
+        type: string
+      isMine:
+        type: boolean
+      text:
+        type: string
+    type: object
+  github_com_odatlar-bot_backend_internal_dto.GuideVideoLikeResponse:
+    properties:
+      likedByMe:
+        type: boolean
+      likesCount:
+        type: integer
+    type: object
+  github_com_odatlar-bot_backend_internal_dto.GuideVideoListResponse:
+    properties:
+      data:
+        items:
+          $ref: '#/definitions/github_com_odatlar-bot_backend_internal_dto.GuideVideoResponse'
+        type: array
+    type: object
+  github_com_odatlar-bot_backend_internal_dto.GuideVideoResponse:
+    properties:
+      commentsCount:
+        type: integer
+      createdAt:
+        type: string
+      description:
+        type: string
+      durationMin:
+        type: integer
+      id:
+        type: string
+      isPublished:
+        type: boolean
+      likedByMe:
+        type: boolean
+      likesCount:
+        type: integer
+      poster:
+        type: string
+      sortOrder:
+        type: integer
+      src:
+        type: string
+      title:
+        type: string
+      updatedAt:
+        type: string
+    type: object
+  github_com_odatlar-bot_backend_internal_dto.HabitSummaryResponse:
+    properties:
+      completed:
+        type: integer
+      percent:
+        type: integer
+      total:
+        type: integer
+      week:
+        items:
+          $ref: '#/definitions/github_com_odatlar-bot_backend_internal_dto.HabitWeekDayResponse'
+        type: array
+    type: object
+  github_com_odatlar-bot_backend_internal_dto.HabitWeekDayResponse:
+    properties:
+      date:
+        type: string
+      isToday:
+        type: boolean
+      label:
+        type: string
+      rate:
+        type: integer
+    type: object
+  github_com_odatlar-bot_backend_internal_dto.IndicatorHistoryEntryResponse:
+    properties:
+      completedAt:
+        type: string
+      date:
+        type: string
+      habitId:
+        type: string
+      habitName:
+        type: string
+      id:
+        type: string
+      isEmpty:
+        type: boolean
+      kind:
+        type: string
+      numericValue:
+        type: number
+      valueId:
+        type: string
+      valueLabel:
+        type: string
+    type: object
+  github_com_odatlar-bot_backend_internal_dto.IndicatorHistoryResponse:
+    properties:
+      data:
+        items:
+          $ref: '#/definitions/github_com_odatlar-bot_backend_internal_dto.IndicatorHistoryEntryResponse'
+        type: array
+    type: object
+  github_com_odatlar-bot_backend_internal_dto.IndicatorListResponse:
+    properties:
+      data:
+        items:
+          $ref: '#/definitions/github_com_odatlar-bot_backend_internal_dto.IndicatorResponse'
+        type: array
+    type: object
+  github_com_odatlar-bot_backend_internal_dto.IndicatorResponse:
+    properties:
+      benefits:
+        items:
+          type: string
+        type: array
+      completedToday:
+        type: boolean
+      createdAt:
+        type: string
+      id:
+        type: string
+      kind:
+        type: string
+      level:
+        type: integer
+      name:
+        type: string
+      streak:
+        type: integer
+      todayIndicatorValue:
+        type: string
+      xp:
+        type: integer
+      xp_reward:
+        type: integer
+    type: object
+  github_com_odatlar-bot_backend_internal_dto.LeaderboardEntryResponse:
+    properties:
+      is_me:
+        type: boolean
+      level:
+        type: integer
+      name:
+        type: string
+      rank:
+        type: integer
+      xp:
+        type: integer
+    type: object
+  github_com_odatlar-bot_backend_internal_dto.LeaderboardResponse:
+    properties:
+      current_user_rank:
+        type: integer
+      data:
+        items:
+          $ref: '#/definitions/github_com_odatlar-bot_backend_internal_dto.LeaderboardEntryResponse'
+        type: array
+    type: object
+  github_com_odatlar-bot_backend_internal_dto.LogIndicatorRequest:
+    properties:
+      is_empty:
+        type: boolean
+      value_id:
+        maxLength: 100
+        type: string
+      value_label:
+        maxLength: 255
+        type: string
+    required:
+    - value_id
+    - value_label
+    type: object
   github_com_odatlar-bot_backend_internal_dto.LoginRequest:
     properties:
       password:
@@ -86,10 +853,162 @@ definitions:
       token:
         type: string
     type: object
+  github_com_odatlar-bot_backend_internal_dto.MonitoredDominant:
+    properties:
+      created_at:
+        type: string
+      id:
+        type: string
+      last_session_at:
+        type: string
+      sessions_completed:
+        type: integer
+      title:
+        type: string
+      type:
+        type: string
+    type: object
+  github_com_odatlar-bot_backend_internal_dto.MonitoredIndicator:
+    properties:
+      created_at:
+        type: string
+      id:
+        type: string
+      last_logged_at:
+        type: string
+      last_value_label:
+        type: string
+      logs_total:
+        type: integer
+      name:
+        type: string
+    type: object
+  github_com_odatlar-bot_backend_internal_dto.MonitoredPractice:
+    properties:
+      completions_total:
+        type: integer
+      created_at:
+        type: string
+      id:
+        type: string
+      last_completed_at:
+        type: string
+      name:
+        type: string
+      streak:
+        type: integer
+    type: object
+  github_com_odatlar-bot_backend_internal_dto.NotificationListResponse:
+    properties:
+      data:
+        items:
+          $ref: '#/definitions/github_com_odatlar-bot_backend_internal_dto.NotificationResponse'
+        type: array
+    type: object
+  github_com_odatlar-bot_backend_internal_dto.NotificationResponse:
+    properties:
+      createdAt:
+        type: string
+      deliveryCount:
+        type: integer
+      id:
+        type: string
+      payload:
+        items:
+          type: integer
+        type: array
+      preview:
+        type: string
+      sentAt:
+        type: string
+      status:
+        type: string
+      target:
+        type: string
+      targetUserIds:
+        items:
+          type: integer
+        type: array
+      title:
+        type: string
+      type:
+        type: string
+      updatedAt:
+        type: string
+    type: object
+  github_com_odatlar-bot_backend_internal_dto.PracticeHistoryEntryResponse:
+    properties:
+      completedAt:
+        type: string
+      date:
+        type: string
+      habitId:
+        type: string
+      habitName:
+        type: string
+      id:
+        type: string
+      kind:
+        type: string
+    type: object
+  github_com_odatlar-bot_backend_internal_dto.PracticeHistoryResponse:
+    properties:
+      data:
+        items:
+          $ref: '#/definitions/github_com_odatlar-bot_backend_internal_dto.PracticeHistoryEntryResponse'
+        type: array
+    type: object
+  github_com_odatlar-bot_backend_internal_dto.PracticeListResponse:
+    properties:
+      data:
+        items:
+          $ref: '#/definitions/github_com_odatlar-bot_backend_internal_dto.PracticeResponse'
+        type: array
+    type: object
+  github_com_odatlar-bot_backend_internal_dto.PracticeResponse:
+    properties:
+      benefits:
+        items:
+          type: string
+        type: array
+      completedToday:
+        type: boolean
+      createdAt:
+        type: string
+      id:
+        type: string
+      kind:
+        type: string
+      level:
+        type: integer
+      name:
+        type: string
+      streak:
+        type: integer
+      xp:
+        type: integer
+      xp_reward:
+        type: integer
+    type: object
   github_com_odatlar-bot_backend_internal_dto.ProfileResponse:
     properties:
       admin:
         $ref: '#/definitions/github_com_odatlar-bot_backend_internal_dto.AdminResponse'
+    type: object
+  github_com_odatlar-bot_backend_internal_dto.StartButtonDTO:
+    properties:
+      enabled:
+        type: boolean
+      text:
+        maxLength: 64
+        type: string
+      web_app_url:
+        type: string
+    type: object
+  github_com_odatlar-bot_backend_internal_dto.UnreadCountResponse:
+    properties:
+      unreadCount:
+        type: integer
     type: object
   github_com_odatlar-bot_backend_internal_dto.UpdateAdminRequest:
     properties:
@@ -114,6 +1033,175 @@ definitions:
         minLength: 3
         type: string
     type: object
+  github_com_odatlar-bot_backend_internal_dto.UpdateBotSettingsRequest:
+    properties:
+      start:
+        $ref: '#/definitions/github_com_odatlar-bot_backend_internal_dto.BotStartDTO'
+    required:
+    - start
+    type: object
+  github_com_odatlar-bot_backend_internal_dto.UpdateBotTokenRequest:
+    properties:
+      bot_token:
+        minLength: 20
+        type: string
+    required:
+    - bot_token
+    type: object
+  github_com_odatlar-bot_backend_internal_dto.UpdateDominantRequest:
+    properties:
+      cue:
+        maxLength: 1000
+        type: string
+      reward:
+        maxLength: 1000
+        type: string
+      title:
+        maxLength: 255
+        minLength: 1
+        type: string
+    required:
+    - title
+    type: object
+  github_com_odatlar-bot_backend_internal_dto.UpdateGuideCourseRequest:
+    properties:
+      children:
+        items:
+          type: integer
+        type: array
+      description:
+        maxLength: 5000
+        type: string
+      is_published:
+        type: boolean
+      slug:
+        maxLength: 100
+        minLength: 1
+        type: string
+      sort_order:
+        type: integer
+      title:
+        maxLength: 255
+        minLength: 1
+        type: string
+    required:
+    - children
+    - slug
+    - title
+    type: object
+  github_com_odatlar-bot_backend_internal_dto.UpdateGuideFileRequest:
+    properties:
+      description:
+        maxLength: 5000
+        type: string
+      ext:
+        maxLength: 20
+        minLength: 1
+        type: string
+      is_published:
+        type: boolean
+      size_bytes:
+        minimum: 0
+        type: integer
+      slug:
+        maxLength: 100
+        minLength: 1
+        type: string
+      sort_order:
+        type: integer
+      title:
+        maxLength: 255
+        minLength: 1
+        type: string
+      url:
+        type: string
+    required:
+    - ext
+    - slug
+    - title
+    - url
+    type: object
+  github_com_odatlar-bot_backend_internal_dto.UpdateGuideVideoRequest:
+    properties:
+      description:
+        maxLength: 5000
+        type: string
+      duration_min:
+        minimum: 0
+        type: integer
+      is_published:
+        type: boolean
+      poster:
+        type: string
+      sort_order:
+        type: integer
+      src:
+        type: string
+      title:
+        maxLength: 255
+        minLength: 1
+        type: string
+    required:
+    - src
+    - title
+    type: object
+  github_com_odatlar-bot_backend_internal_dto.UpdateIndicatorRequest:
+    properties:
+      benefits:
+        items:
+          type: string
+        maxItems: 20
+        type: array
+      name:
+        maxLength: 255
+        minLength: 1
+        type: string
+    required:
+    - name
+    type: object
+  github_com_odatlar-bot_backend_internal_dto.UpdateNotificationRequest:
+    properties:
+      payload:
+        items:
+          type: integer
+        type: array
+      preview:
+        maxLength: 2000
+        type: string
+      target:
+        enum:
+        - all
+        - selected
+        type: string
+      target_user_ids:
+        items:
+          type: integer
+        type: array
+      title:
+        maxLength: 255
+        minLength: 1
+        type: string
+      type:
+        type: string
+    required:
+    - target
+    - title
+    - type
+    type: object
+  github_com_odatlar-bot_backend_internal_dto.UpdatePracticeRequest:
+    properties:
+      benefits:
+        items:
+          type: string
+        maxItems: 20
+        type: array
+      name:
+        maxLength: 255
+        minLength: 1
+        type: string
+    required:
+    - name
+    type: object
   github_com_odatlar-bot_backend_internal_dto.UpdateStatusRequest:
     properties:
       status:
@@ -125,9 +1213,177 @@ definitions:
     required:
     - status
     type: object
+  github_com_odatlar-bot_backend_internal_dto.UpdateXPSettingsRequest:
+    properties:
+      dominant_create_xp:
+        maximum: 100000
+        minimum: 0
+        type: integer
+      dominant_session_xp:
+        maximum: 100000
+        minimum: 0
+        type: integer
+      indicator_log_xp:
+        maximum: 100000
+        minimum: 0
+        type: integer
+      level_up_xp:
+        maximum: 1000000
+        minimum: 1
+        type: integer
+      practice_complete_xp:
+        maximum: 100000
+        minimum: 0
+        type: integer
+    type: object
+  github_com_odatlar-bot_backend_internal_dto.UserActivityEntry:
+    properties:
+      at:
+        type: string
+      detail:
+        type: string
+      kind:
+        description: practice_complete | indicator_log | dominant_session
+        type: string
+      title:
+        type: string
+    type: object
+  github_com_odatlar-bot_backend_internal_dto.UserActivityResponse:
+    properties:
+      data:
+        items:
+          $ref: '#/definitions/github_com_odatlar-bot_backend_internal_dto.UserActivityEntry'
+        type: array
+      from:
+        type: string
+      limit:
+        type: integer
+      to:
+        type: string
+    type: object
+  github_com_odatlar-bot_backend_internal_dto.UserMonitoringResponse:
+    properties:
+      dominants:
+        items:
+          $ref: '#/definitions/github_com_odatlar-bot_backend_internal_dto.MonitoredDominant'
+        type: array
+      generated_at:
+        type: string
+      indicators:
+        items:
+          $ref: '#/definitions/github_com_odatlar-bot_backend_internal_dto.MonitoredIndicator'
+        type: array
+      practices:
+        items:
+          $ref: '#/definitions/github_com_odatlar-bot_backend_internal_dto.MonitoredPractice'
+        type: array
+      recent_activity:
+        items:
+          $ref: '#/definitions/github_com_odatlar-bot_backend_internal_dto.UserActivityEntry'
+        type: array
+      summary:
+        $ref: '#/definitions/github_com_odatlar-bot_backend_internal_dto.UserMonitoringSummary'
+      user:
+        $ref: '#/definitions/github_com_odatlar-bot_backend_internal_dto.BotUserResponse'
+    type: object
+  github_com_odatlar-bot_backend_internal_dto.UserMonitoringSummary:
+    properties:
+      best_streak:
+        type: integer
+      days_since_start:
+        type: integer
+      dominant_count:
+        type: integer
+      dominant_sessions_today:
+        type: integer
+      dominant_sessions_total:
+        type: integer
+      dominant_sessions_week:
+        type: integer
+      indicator_count:
+        type: integer
+      indicator_logs_today:
+        type: integer
+      indicator_logs_total:
+        type: integer
+      indicator_logs_week:
+        type: integer
+      level:
+        type: integer
+      level_up_xp:
+        type: integer
+      practice_completions_today:
+        type: integer
+      practice_completions_total:
+        type: integer
+      practice_completions_week:
+        type: integer
+      practice_count:
+        type: integer
+      rank:
+        type: integer
+      xp:
+        type: integer
+    type: object
+  github_com_odatlar-bot_backend_internal_dto.UserNotificationListResponse:
+    properties:
+      data:
+        items:
+          $ref: '#/definitions/github_com_odatlar-bot_backend_internal_dto.UserNotificationResponse'
+        type: array
+      unreadCount:
+        type: integer
+    type: object
+  github_com_odatlar-bot_backend_internal_dto.UserNotificationResponse:
+    properties:
+      createdAt:
+        type: string
+      id:
+        type: string
+      isRead:
+        type: boolean
+      payload:
+        items:
+          type: integer
+        type: array
+      preview:
+        type: string
+      title:
+        type: string
+      type:
+        type: string
+    type: object
+  github_com_odatlar-bot_backend_internal_dto.XPSettingsResponse:
+    properties:
+      dominant_create_xp:
+        type: integer
+      dominant_session_xp:
+        type: integer
+      indicator_log_xp:
+        type: integer
+      level_up_xp:
+        type: integer
+      practice_complete_xp:
+        type: integer
+      updated_at:
+        type: string
+    type: object
   github_com_odatlar-bot_backend_pkg_response.ErrorBody:
     properties:
       error:
+        type: string
+    type: object
+  github_com_odatlar-bot_backend_pkg_upload.SavedFile:
+    properties:
+      ext:
+        type: string
+      path:
+        type: string
+      sizeBytes:
+        type: integer
+      sizeLabel:
+        type: string
+      url:
         type: string
     type: object
 host: localhost:8080
@@ -135,12 +1391,13 @@ info:
   contact:
     email: support@odatlar-bot.uz
     name: API Support
-  description: Admin CRUD, login va profil APIlari
+  description: Admin panel, Bot Runtime (Telegram WebApp), Qo'llanma (videolar, kurslar,
+    fayllar) va Bildirishnomalar APIlari.
   license:
     name: MIT
     url: https://opensource.org/licenses/MIT
   termsOfService: http://swagger.io/terms/
-  title: Odatlar Bot Admin API
+  title: Odatlar Bot API
   version: "1.0"
 paths:
   /admins:
@@ -220,11 +1477,11 @@ paths:
     delete:
       description: Adminni tizimdan o'chiradi
       parameters:
-      - description: Admin ID
+      - description: Admin ID (UUID)
         in: path
         name: id
         required: true
-        type: integer
+        type: string
       produces:
       - application/json
       responses:
@@ -254,7 +1511,7 @@ paths:
         in: path
         name: id
         required: true
-        type: integer
+        type: string
       produces:
       - application/json
       responses:
@@ -288,7 +1545,7 @@ paths:
         in: path
         name: id
         required: true
-        type: integer
+        type: string
       - description: Yangilash ma'lumotlari
         in: body
         name: body
@@ -337,7 +1594,7 @@ paths:
         in: path
         name: id
         required: true
-        type: integer
+        type: string
       - description: Status ma'lumotlari
         in: body
         name: body
@@ -437,10 +1694,2184 @@ paths:
       summary: Admin profili
       tags:
       - Auth
+  /bot-runtime/archive:
+    get:
+      description: Belgilangan davr uchun amaliyot/ko'rsatkich arxivi
+      parameters:
+      - description: Turi (practice, indicator yoki bo'sh — hammasi)
+        in: query
+        name: kind
+        type: string
+      - description: Boshlanish sanasi (YYYY-MM-DD)
+        in: query
+        name: from
+        required: true
+        type: string
+      - description: Tugash sanasi (YYYY-MM-DD)
+        in: query
+        name: to
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_internal_dto.ArchiveResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody'
+      security:
+      - TelegramInitData: []
+      summary: Arxiv ma'lumotlari
+      tags:
+      - Archive
+  /bot-runtime/config:
+    get:
+      description: Bot servisi uchun token va /start sozlamalarini qaytaradi (bot
+        token kerak)
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_internal_dto.BotRuntimeConfigResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody'
+      security:
+      - BotToken: []
+      summary: Bot runtime konfiguratsiyasi
+      tags:
+      - Bot Runtime
+  /bot-runtime/dominants:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_internal_dto.DominantListResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody'
+      security:
+      - TelegramInitData: []
+      summary: Dominantlar ro'yxati
+      tags:
+      - Dominants
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Dominant ma'lumotlari
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_odatlar-bot_backend_internal_dto.CreateDominantRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_internal_dto.DominantResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody'
+      security:
+      - TelegramInitData: []
+      summary: Yangi dominant yaratish
+      tags:
+      - Dominants
+  /bot-runtime/dominants/{id}:
+    delete:
+      parameters:
+      - description: Dominant ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      responses:
+        "204":
+          description: No Content
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody'
+      security:
+      - TelegramInitData: []
+      summary: Dominantni o'chirish
+      tags:
+      - Dominants
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: Dominant ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Yangilangan ma'lumotlar
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_odatlar-bot_backend_internal_dto.UpdateDominantRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_internal_dto.DominantResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody'
+      security:
+      - TelegramInitData: []
+      summary: Dominantni yangilash
+      tags:
+      - Dominants
+  /bot-runtime/dominants/{id}/session:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Dominant ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Sessiya ma'lumotlari
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_odatlar-bot_backend_internal_dto.CompleteDominantSessionRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_internal_dto.DominantResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody'
+      security:
+      - TelegramInitData: []
+      summary: Dominant sessiyasini yakunlash
+      tags:
+      - Dominants
+  /bot-runtime/guides/courses:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_internal_dto.GuideCourseListResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody'
+      security:
+      - TelegramInitData: []
+      summary: Kurslar ro'yxati (WebApp)
+      tags:
+      - Guide Courses
+  /bot-runtime/guides/courses/{id}:
+    get:
+      parameters:
+      - description: Kurs slug yoki ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_internal_dto.GuideCourseResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody'
+      security:
+      - TelegramInitData: []
+      summary: Kurs tafsilotlari (WebApp)
+      tags:
+      - Guide Courses
+  /bot-runtime/guides/files:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_internal_dto.GuideFileListResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody'
+      security:
+      - TelegramInitData: []
+      summary: Fayllar ro'yxati (WebApp)
+      tags:
+      - Guide Files
+  /bot-runtime/guides/lessons/{lessonId}:
+    get:
+      parameters:
+      - description: Dars ID
+        in: path
+        name: lessonId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_internal_dto.GuideLessonResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody'
+      security:
+      - TelegramInitData: []
+      summary: Dars tafsilotlari (WebApp)
+      tags:
+      - Guide Courses
+  /bot-runtime/guides/videos:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_internal_dto.GuideVideoListResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody'
+      security:
+      - TelegramInitData: []
+      summary: Qo'llanma videolari ro'yxati (WebApp)
+      tags:
+      - Guide Videos
+  /bot-runtime/guides/videos/{id}:
+    get:
+      parameters:
+      - description: Video ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_internal_dto.GuideVideoResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody'
+      security:
+      - TelegramInitData: []
+      summary: Qo'llanma videosi (WebApp)
+      tags:
+      - Guide Videos
+  /bot-runtime/guides/videos/{id}/comments:
+    get:
+      parameters:
+      - description: Video ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_internal_dto.GuideVideoCommentListResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody'
+      security:
+      - TelegramInitData: []
+      summary: Video izohlari ro'yxati
+      tags:
+      - Guide Videos
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Video ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Izoh matni
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_odatlar-bot_backend_internal_dto.CreateGuideVideoCommentRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_internal_dto.GuideVideoCommentResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody'
+      security:
+      - TelegramInitData: []
+      summary: Videoga izoh qo'shish
+      tags:
+      - Guide Videos
+  /bot-runtime/guides/videos/{id}/like:
+    post:
+      parameters:
+      - description: Video ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_internal_dto.GuideVideoLikeResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody'
+      security:
+      - TelegramInitData: []
+      summary: Videoga like qo'yish/olib tashlash
+      tags:
+      - Guide Videos
+  /bot-runtime/habits/summary:
+    get:
+      parameters:
+      - description: Turi (practice yoki indicator)
+        in: query
+        name: kind
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_internal_dto.HabitSummaryResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody'
+      security:
+      - TelegramInitData: []
+      summary: Odatlar xulosasi
+      tags:
+      - Habits
+  /bot-runtime/indicators:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_internal_dto.IndicatorListResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody'
+      security:
+      - TelegramInitData: []
+      summary: Ko'rsatkichlar ro'yxati
+      tags:
+      - Indicators
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Ko'rsatkich ma'lumotlari
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_odatlar-bot_backend_internal_dto.CreateIndicatorRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_internal_dto.IndicatorResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody'
+      security:
+      - TelegramInitData: []
+      summary: Yangi ko'rsatkich yaratish
+      tags:
+      - Indicators
+  /bot-runtime/indicators/{id}:
+    delete:
+      parameters:
+      - description: Ko'rsatkich ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      responses:
+        "204":
+          description: No Content
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody'
+      security:
+      - TelegramInitData: []
+      summary: Ko'rsatkichni o'chirish
+      tags:
+      - Indicators
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: Ko'rsatkich ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Yangilangan ma'lumotlar
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_odatlar-bot_backend_internal_dto.UpdateIndicatorRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_internal_dto.IndicatorResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody'
+      security:
+      - TelegramInitData: []
+      summary: Ko'rsatkichni yangilash
+      tags:
+      - Indicators
+  /bot-runtime/indicators/{id}/log:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Ko'rsatkich ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Qiymat ma'lumotlari
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_odatlar-bot_backend_internal_dto.LogIndicatorRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_internal_dto.IndicatorResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody'
+      security:
+      - TelegramInitData: []
+      summary: Ko'rsatkich qiymatini yozish
+      tags:
+      - Indicators
+  /bot-runtime/indicators/history:
+    get:
+      parameters:
+      - description: Boshlanish sanasi (YYYY-MM-DD)
+        in: query
+        name: from
+        required: true
+        type: string
+      - description: Tugash sanasi (YYYY-MM-DD)
+        in: query
+        name: to
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_internal_dto.IndicatorHistoryResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody'
+      security:
+      - TelegramInitData: []
+      summary: Ko'rsatkichlar tarixi
+      tags:
+      - Indicators
+  /bot-runtime/leaderboard:
+    get:
+      parameters:
+      - description: Natijalar soni (default 20)
+        in: query
+        name: limit
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_internal_dto.LeaderboardResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody'
+      security:
+      - TelegramInitData: []
+      summary: Reyting jadvali (WebApp)
+      tags:
+      - Leaderboard
+  /bot-runtime/me:
+    post:
+      description: Telegram initData orqali joriy foydalanuvchi ma'lumotini qaytaradi
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_internal_dto.BotUserResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody'
+      security:
+      - TelegramInitData: []
+      summary: WebApp foydalanuvchisi o'z ma'lumoti
+      tags:
+      - Bot Runtime
+  /bot-runtime/notifications:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_internal_dto.UserNotificationListResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody'
+      security:
+      - TelegramInitData: []
+      summary: Foydalanuvchi bildirishnomalari
+      tags:
+      - Notifications
+  /bot-runtime/notifications/{id}/read:
+    post:
+      parameters:
+      - description: Delivery ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_internal_dto.UnreadCountResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody'
+      security:
+      - TelegramInitData: []
+      summary: Bildirishnomani o'qilgan deb belgilash
+      tags:
+      - Notifications
+  /bot-runtime/notifications/read-all:
+    post:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_internal_dto.UnreadCountResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody'
+      security:
+      - TelegramInitData: []
+      summary: Barcha bildirishnomalarni o'qilgan deb belgilash
+      tags:
+      - Notifications
+  /bot-runtime/practices:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_internal_dto.PracticeListResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody'
+      security:
+      - TelegramInitData: []
+      summary: Amaliyotlar ro'yxati
+      tags:
+      - Practices
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Amaliyot ma'lumotlari
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_odatlar-bot_backend_internal_dto.CreatePracticeRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_internal_dto.PracticeResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody'
+      security:
+      - TelegramInitData: []
+      summary: Yangi amaliyot yaratish
+      tags:
+      - Practices
+  /bot-runtime/practices/{id}:
+    delete:
+      parameters:
+      - description: Amaliyot ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      responses:
+        "204":
+          description: No Content
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody'
+      security:
+      - TelegramInitData: []
+      summary: Amaliyotni o'chirish
+      tags:
+      - Practices
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: Amaliyot ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Yangilangan ma'lumotlar
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_odatlar-bot_backend_internal_dto.UpdatePracticeRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_internal_dto.PracticeResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody'
+      security:
+      - TelegramInitData: []
+      summary: Amaliyotni yangilash
+      tags:
+      - Practices
+  /bot-runtime/practices/{id}/toggle:
+    post:
+      parameters:
+      - description: Amaliyot ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_internal_dto.PracticeResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody'
+      security:
+      - TelegramInitData: []
+      summary: Amaliyotni bajarilgan/bajarilmagan qilish
+      tags:
+      - Practices
+  /bot-runtime/practices/history:
+    get:
+      parameters:
+      - description: Boshlanish sanasi (YYYY-MM-DD)
+        in: query
+        name: from
+        required: true
+        type: string
+      - description: Tugash sanasi (YYYY-MM-DD)
+        in: query
+        name: to
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_internal_dto.PracticeHistoryResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody'
+      security:
+      - TelegramInitData: []
+      summary: Amaliyotlar tarixi
+      tags:
+      - Practices
+  /bot-runtime/start:
+    post:
+      consumes:
+      - application/json
+      description: Bot /start bosilganda foydalanuvchini saqlaydi yoki yangilaydi
+      parameters:
+      - description: Foydalanuvchi ma'lumotlari
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_odatlar-bot_backend_internal_dto.BotStartUserRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_internal_dto.BotUserResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody'
+      security:
+      - BotToken: []
+      summary: Foydalanuvchi /start hodisasi
+      tags:
+      - Bot Runtime
+  /bot-runtime/webapp/open:
+    post:
+      description: WebApp ichidan foydalanuvchi ma'lumotini saqlaydi/yangilaydi (Telegram
+        initData kerak)
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_internal_dto.BotUserResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody'
+      security:
+      - TelegramInitData: []
+      summary: WebApp ochilgan hodisasi
+      tags:
+      - Bot Runtime
+  /bot-runtime/ws/notifications:
+    get:
+      description: Real-time bildirishnomalar uchun WebSocket ulanishi. initData query
+        parametr orqali autentifikatsiya.
+      parameters:
+      - description: Telegram WebApp initData
+        in: query
+        name: initData
+        required: true
+        type: string
+      responses:
+        "101":
+          description: Switching Protocols
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody'
+      summary: Bildirishnomalar WebSocket
+      tags:
+      - Notifications
+  /bot/guides/courses:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_internal_dto.GuideCourseListResponse'
+      security:
+      - BearerAuth: []
+      summary: Qo'llanma kurslari ro'yxati (admin)
+      tags:
+      - Guide Courses
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Kurs
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_odatlar-bot_backend_internal_dto.CreateGuideCourseRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_internal_dto.GuideCourseResponse'
+      security:
+      - BearerAuth: []
+      summary: Yangi qo'llanma kursi
+      tags:
+      - Guide Courses
+  /bot/guides/courses/{id}:
+    delete:
+      parameters:
+      - description: Kurs slug yoki ID
+        in: path
+        name: id
+        required: true
+        type: string
+      responses:
+        "204":
+          description: No Content
+      security:
+      - BearerAuth: []
+      summary: Qo'llanma kursini o'chirish
+      tags:
+      - Guide Courses
+    get:
+      parameters:
+      - description: Kurs slug yoki ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_internal_dto.GuideCourseResponse'
+      security:
+      - BearerAuth: []
+      summary: Bitta qo'llanma kursi (admin)
+      tags:
+      - Guide Courses
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: Kurs slug yoki ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Kurs
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_odatlar-bot_backend_internal_dto.UpdateGuideCourseRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_internal_dto.GuideCourseResponse'
+      security:
+      - BearerAuth: []
+      summary: Qo'llanma kursini yangilash
+      tags:
+      - Guide Courses
+  /bot/guides/files:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_internal_dto.GuideFileListResponse'
+      security:
+      - BearerAuth: []
+      summary: Qo'llanma fayllari ro'yxati (admin)
+      tags:
+      - Guide Files
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Fayl
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_odatlar-bot_backend_internal_dto.CreateGuideFileRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_internal_dto.GuideFileResponse'
+      security:
+      - BearerAuth: []
+      summary: Yangi qo'llanma fayli
+      tags:
+      - Guide Files
+  /bot/guides/files/{id}:
+    delete:
+      parameters:
+      - description: Fayl slug yoki ID
+        in: path
+        name: id
+        required: true
+        type: string
+      responses:
+        "204":
+          description: No Content
+      security:
+      - BearerAuth: []
+      summary: Qo'llanma faylini o'chirish
+      tags:
+      - Guide Files
+    get:
+      parameters:
+      - description: Fayl slug yoki ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_internal_dto.GuideFileResponse'
+      security:
+      - BearerAuth: []
+      summary: Bitta qo'llanma fayli (admin)
+      tags:
+      - Guide Files
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: Fayl slug yoki ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Fayl
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_odatlar-bot_backend_internal_dto.UpdateGuideFileRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_internal_dto.GuideFileResponse'
+      security:
+      - BearerAuth: []
+      summary: Qo'llanma faylini yangilash
+      tags:
+      - Guide Files
+  /bot/guides/upload/file:
+    post:
+      consumes:
+      - multipart/form-data
+      description: Hujjat fayl (pdf, txt, doc, docx, zip va boshqalar)
+      parameters:
+      - description: Fayl
+        in: formData
+        name: file
+        required: true
+        type: file
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_pkg_upload.SavedFile'
+      security:
+      - BearerAuth: []
+      summary: Qo'llanma fayli yuklash
+      tags:
+      - Guide Files
+  /bot/guides/upload/poster:
+    post:
+      consumes:
+      - multipart/form-data
+      description: Faqat rasm fayli (jpg, png, webp, gif). JSON orqali URL qabul qilinmaydi.
+      parameters:
+      - description: Poster rasm
+        in: formData
+        name: file
+        required: true
+        type: file
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_pkg_upload.SavedFile'
+      security:
+      - BearerAuth: []
+      summary: Poster rasm yuklash
+      tags:
+      - Guide Videos
+  /bot/guides/upload/video:
+    post:
+      consumes:
+      - multipart/form-data
+      description: Video fayl (mp4, webm, mov). Tashqi URL o'rniga yuklangan path
+        ishlatiladi.
+      parameters:
+      - description: Video fayl
+        in: formData
+        name: file
+        required: true
+        type: file
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_pkg_upload.SavedFile'
+      security:
+      - BearerAuth: []
+      summary: Video fayl yuklash
+      tags:
+      - Guide Videos
+  /bot/guides/videos:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_internal_dto.GuideVideoListResponse'
+      security:
+      - BearerAuth: []
+      summary: Qo'llanma videolari ro'yxati (admin)
+      tags:
+      - Guide Videos
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Video
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_odatlar-bot_backend_internal_dto.CreateGuideVideoRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_internal_dto.GuideVideoResponse'
+      security:
+      - BearerAuth: []
+      summary: Yangi qo'llanma videosi
+      tags:
+      - Guide Videos
+  /bot/guides/videos/{id}:
+    delete:
+      parameters:
+      - description: Video ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      responses:
+        "204":
+          description: No Content
+      security:
+      - BearerAuth: []
+      summary: Qo'llanma videosini o'chirish
+      tags:
+      - Guide Videos
+    get:
+      parameters:
+      - description: Video ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_internal_dto.GuideVideoResponse'
+      security:
+      - BearerAuth: []
+      summary: Bitta qo'llanma videosi (admin)
+      tags:
+      - Guide Videos
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: Video ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Video
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_odatlar-bot_backend_internal_dto.UpdateGuideVideoRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_internal_dto.GuideVideoResponse'
+      security:
+      - BearerAuth: []
+      summary: Qo'llanma videosini yangilash
+      tags:
+      - Guide Videos
+  /bot/leaderboard:
+    get:
+      description: XP bo'yicha eng yuqori foydalanuvchilar (telegram_id, username
+        bilan)
+      parameters:
+      - default: 20
+        description: Limit
+        in: query
+        name: limit
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_internal_dto.AdminLeaderboardResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody'
+      security:
+      - BearerAuth: []
+      summary: Admin XP reytingi
+      tags:
+      - Bot Stats
+  /bot/notifications:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_internal_dto.NotificationListResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody'
+      security:
+      - BearerAuth: []
+      summary: Bildirishnomalar ro'yxati (admin)
+      tags:
+      - Notifications
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Bildirishnoma ma'lumotlari
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_odatlar-bot_backend_internal_dto.CreateNotificationRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_internal_dto.NotificationResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody'
+      security:
+      - BearerAuth: []
+      summary: Yangi bildirishnoma yaratish (admin)
+      tags:
+      - Notifications
+  /bot/notifications/{id}:
+    delete:
+      parameters:
+      - description: Bildirishnoma ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      responses:
+        "204":
+          description: No Content
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody'
+      security:
+      - BearerAuth: []
+      summary: Bildirishnomani o'chirish (admin)
+      tags:
+      - Notifications
+    get:
+      parameters:
+      - description: Bildirishnoma ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_internal_dto.NotificationResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody'
+      security:
+      - BearerAuth: []
+      summary: Bildirishnoma tafsilotlari (admin)
+      tags:
+      - Notifications
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: Bildirishnoma ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Yangilangan ma'lumotlar
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_odatlar-bot_backend_internal_dto.UpdateNotificationRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_internal_dto.NotificationResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody'
+      security:
+      - BearerAuth: []
+      summary: Bildirishnomani yangilash (admin)
+      tags:
+      - Notifications
+  /bot/notifications/{id}/send:
+    post:
+      description: Draft holatdagi bildirishnomani foydalanuvchilarga yuboradi
+      parameters:
+      - description: Bildirishnoma ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_internal_dto.NotificationResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody'
+      security:
+      - BearerAuth: []
+      summary: Bildirishnomani yuborish (admin)
+      tags:
+      - Notifications
+  /bot/settings:
+    get:
+      description: Token va /start sozlamalarini qaytaradi
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_internal_dto.BotSettingsResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody'
+      security:
+      - BearerAuth: []
+      summary: Bot sozlamalarini olish
+      tags:
+      - Bot Settings
+    put:
+      consumes:
+      - application/json
+      description: Start xabari va pastki tugmani sozlash
+      parameters:
+      - description: Start sozlamalari
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_odatlar-bot_backend_internal_dto.UpdateBotSettingsRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_internal_dto.BotSettingsResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody'
+      security:
+      - BearerAuth: []
+      summary: /start sozlamalarini yangilash
+      tags:
+      - Bot Settings
+  /bot/stats:
+    get:
+      description: Foydalanuvchilar, amaliyotlar, indikatorlar, dominantalar va XP
+        bo'yicha umumiy ko'rsatkichlar
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_internal_dto.AdminStatsResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody'
+      security:
+      - BearerAuth: []
+      summary: Admin statistikasi
+      tags:
+      - Bot Stats
+  /bot/token:
+    delete:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_internal_dto.BotTokenResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody'
+      security:
+      - BearerAuth: []
+      summary: Bot tokenni o'chirish
+      tags:
+      - Bot Settings
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_internal_dto.BotTokenResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody'
+      security:
+      - BearerAuth: []
+      summary: Bot token holati
+      tags:
+      - Bot Settings
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: Bot token
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_odatlar-bot_backend_internal_dto.UpdateBotTokenRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_internal_dto.BotTokenResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody'
+      security:
+      - BearerAuth: []
+      summary: Bot token qo'shish/yangilash
+      tags:
+      - Bot Settings
+  /bot/users:
+    get:
+      description: Botga start bosgan foydalanuvchilar ro'yxati
+      parameters:
+      - default: 1
+        description: Sahifa
+        in: query
+        name: page
+        type: integer
+      - default: 10
+        description: Limit
+        in: query
+        name: limit
+        type: integer
+      - description: Qidiruv
+        in: query
+        name: search
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_internal_dto.BotUserListResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody'
+      security:
+      - BearerAuth: []
+      summary: /start bosgan foydalanuvchilar
+      tags:
+      - Bot Settings
+  /bot/users/{id}:
+    get:
+      description: Tanlangan foydalanuvchi uchun to'liq ma'lumotlarni qaytaradi
+      parameters:
+      - description: Bot user ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_internal_dto.BotUserResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody'
+      security:
+      - BearerAuth: []
+      summary: Bitta bot foydalanuvchi tafsiloti
+      tags:
+      - Bot Settings
+  /bot/users/{id}/activity:
+    get:
+      description: Amaliyot bajarilishlari, indikator kiritishlari va dominanta sessiyalarini
+        xronologik tartibda qaytaradi
+      parameters:
+      - description: Bot user ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Boshlanish sanasi (YYYY-MM-DD)
+        in: query
+        name: from
+        type: string
+      - description: Tugash sanasi (YYYY-MM-DD)
+        in: query
+        name: to
+        type: string
+      - default: 50
+        description: Limit
+        in: query
+        name: limit
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_internal_dto.UserActivityResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody'
+      security:
+      - BearerAuth: []
+      summary: Foydalanuvchi faoliyat lentasi
+      tags:
+      - Bot Monitoring
+  /bot/users/{id}/monitoring:
+    get:
+      description: Bitta foydalanuvchi bo'yicha profil, umumiy ko'rsatkichlar, amaliyot/indikator/dominanta
+        tafsilotlari va so'nggi faoliyat lentasi
+      parameters:
+      - description: Bot user ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_internal_dto.UserMonitoringResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody'
+      security:
+      - BearerAuth: []
+      summary: Foydalanuvchini to'liq monitoring
+      tags:
+      - Bot Monitoring
+  /bot/xp-settings:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_internal_dto.XPSettingsResponse'
+      security:
+      - BearerAuth: []
+      summary: XP sozlamalarini olish
+      tags:
+      - xp-settings
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: XP sozlamalari
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_odatlar-bot_backend_internal_dto.UpdateXPSettingsRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_odatlar-bot_backend_internal_dto.XPSettingsResponse'
+      security:
+      - BearerAuth: []
+      summary: XP sozlamalarini yangilash
+      tags:
+      - xp-settings
 securityDefinitions:
   BearerAuth:
     description: 'JWT token. Format: Bearer {token}'
     in: header
     name: Authorization
+    type: apiKey
+  BotToken:
+    description: 'Telegram bot token. Format: Bearer {bot_token}'
+    in: header
+    name: Authorization
+    type: apiKey
+  TelegramInitData:
+    description: 'Telegram WebApp initData. Alternativa: Authorization: tma {initData}'
+    in: header
+    name: X-Telegram-Init-Data
     type: apiKey
 swagger: "2.0"

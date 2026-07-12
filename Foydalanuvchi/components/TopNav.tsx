@@ -6,8 +6,6 @@ import { motion } from 'framer-motion';
 import { ArrowLeft } from 'lucide-react';
 import { useUserData } from '@/components/UserDataProvider';
 import NotificationBadge from '@/components/notifications/NotificationBadge';
-import { findLesson, findCourse } from '@/lib/guideCourse';
-import { findExternalVideo } from '@/lib/guide';
 import { useNavigation } from '@/components/NavigationProvider';
 import { TelegramProfileMenu } from '@/components/topnav/TelegramProfileMenu';
 
@@ -30,21 +28,9 @@ function getTitle(pathname: string): string {
   if (pathname.includes('/sessiya')) return 'Mashq sessiyasi';
   if (pathname.includes('/tur')) return 'Mashq usuli';
   if (pathname.match(/^\/dominantalar\/[^/]+$/)) return 'Dominanta mashqi';
-  const lessonMatch = pathname.match(/^\/qollanma\/dars\/([^/]+)$/);
-  if (lessonMatch) {
-    const ctx = findLesson(lessonMatch[1]);
-    if (ctx) return ctx.lesson.title;
-  }
-  const courseMatch = pathname.match(/^\/qollanma\/kurs\/([^/]+)$/);
-  if (courseMatch) {
-    const course = findCourse(courseMatch[1]);
-    if (course) return course.title;
-  }
-  const videoMatch = pathname.match(/^\/qollanma\/video\/([^/]+)$/);
-  if (videoMatch) {
-    const video = findExternalVideo(videoMatch[1]);
-    if (video) return video.title;
-  }
+  if (pathname.match(/^\/qollanma\/dars\/[^/]+$/)) return 'Dars';
+  if (pathname.match(/^\/qollanma\/kurs\/[^/]+$/)) return 'Kurs';
+  if (pathname.match(/^\/qollanma\/video\/[^/]+$/)) return 'Video';
   return 'Odatlar Klub';
 }
 
@@ -90,9 +76,7 @@ export default function TopNav({ showBack = false }: TopNavProps) {
       return;
     }
     if (pathname.startsWith('/qollanma/dars/')) {
-      const lessonId = pathname.split('/').pop();
-      const ctx = lessonId ? findLesson(lessonId) : null;
-      router.push(ctx ? `/qollanma/kurs/${ctx.course.id}` : '/qollanma?tab=kurslar');
+      router.push('/qollanma?tab=kurslar');
       return;
     }
     if (pathname.startsWith('/qollanma/kurs/')) {

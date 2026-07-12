@@ -56,6 +56,19 @@ Bot servisi backend bilan shu API orqali ishlaydi. Admin panelda saqlangan **Tel
 | `DELETE` | `/bot-runtime/dominants/{id}` | Dominantani o'chirish |
 | `POST` | `/bot-runtime/dominants/{id}/session` | Sessiyani yakunlash (10 daqiqalik mashq) |
 | `GET` | `/bot-runtime/leaderboard` | XP bo'yicha klub reytingi (`limit`, default 20) |
+| `GET` | `/bot-runtime/guides/videos` | Qo'llanma videolari ro'yxati |
+| `GET` | `/bot-runtime/guides/videos/{id}` | Bitta video |
+| `POST` | `/bot-runtime/guides/videos/{id}/like` | Like toggle |
+| `GET` | `/bot-runtime/guides/videos/{id}/comments` | Video izohlari |
+| `POST` | `/bot-runtime/guides/videos/{id}/comments` | Izoh qoldirish |
+| `GET` | `/bot-runtime/guides/courses` | Qo'llanma kurslari ro'yxati |
+| `GET` | `/bot-runtime/guides/courses/{id}` | Bitta kurs (to'liq daraxt) |
+| `GET` | `/bot-runtime/guides/lessons/{lessonId}` | Bitta dars + breadcrumb |
+| `GET` | `/bot-runtime/guides/files` | Qo'llanma fayllari ro'yxati |
+| `GET` | `/bot-runtime/notifications` | Bildirishnomalar ro'yxati |
+| `POST` | `/bot-runtime/notifications/{id}/read` | Bildirishnomani o'qilgan deb belgilash |
+| `POST` | `/bot-runtime/notifications/read-all` | Hammasini o'qilgan deb belgilash |
+| `GET` | `/bot-runtime/ws/notifications` | WebSocket (real-time) |
 
 ---
 
@@ -316,6 +329,23 @@ Amaliyot/indikator/dominanta harakatlari (`toggle`, `log`, `session`, `create`) 
 ```
 
 `xp_reward` — shu harakat uchun berilgan yoki olib tashlangan XP, `xp` va `level` — yangilangan holat.
+
+### Qo'llanma videolari
+
+Batafsil hujjat: [GUIDES_API.md](GUIDES_API.md)
+
+```
+GET /bot-runtime/guides/videos
+GET /bot-runtime/guides/videos/{id}
+POST /bot-runtime/guides/videos/{id}/like
+GET /bot-runtime/guides/videos/{id}/comments
+POST /bot-runtime/guides/videos/{id}/comments
+```
+
+**Izoh qoldirish so'rovi:**
+```json
+{ "text": "Juda foydali!" }
+```
 
 ### Amaliyotlar CRUD
 

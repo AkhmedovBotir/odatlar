@@ -305,6 +305,23 @@ func (r *BotUserRepository) GetRankByXP(ctx context.Context, botUserID int64) (i
 	return rank, nil
 }
 
+func (r *BotUserRepository) ListAllIDs(ctx context.Context) ([]int64, error) {
+	rows, err := r.pool.Query(ctx, `SELECT id FROM bot_users ORDER BY id`)
+	if err != nil {
+		return nil, fmt.Errorf("list bot user ids: %w", err)
+	}
+	defer rows.Close()
+	ids := make([]int64, 0)
+	for rows.Next() {
+		var id int64
+		if err := rows.Scan(&id); err != nil {
+			return nil, err
+		}
+		ids = append(ids, id)
+	}
+	return ids, rows.Err()
+}
+
 func scanBotUsers(rows interface {
 	Next() bool
 	Scan(dest ...any) error

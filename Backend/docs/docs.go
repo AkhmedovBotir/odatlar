@@ -154,7 +154,7 @@ const docTemplate = `{
                 "summary": "Adminni ID bo'yicha olish",
                 "parameters": [
                     {
-                        "type": "integer",
+                        "type": "string",
                         "description": "Admin ID",
                         "name": "id",
                         "in": "path",
@@ -207,7 +207,7 @@ const docTemplate = `{
                 "summary": "Adminni yangilash",
                 "parameters": [
                     {
-                        "type": "integer",
+                        "type": "string",
                         "description": "Admin ID",
                         "name": "id",
                         "in": "path",
@@ -278,8 +278,8 @@ const docTemplate = `{
                 "summary": "Adminni o'chirish",
                 "parameters": [
                     {
-                        "type": "integer",
-                        "description": "Admin ID",
+                        "type": "string",
+                        "description": "Admin ID (UUID)",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -330,7 +330,7 @@ const docTemplate = `{
                 "summary": "Admin statusini yangilash",
                 "parameters": [
                     {
-                        "type": "integer",
+                        "type": "string",
                         "description": "Admin ID",
                         "name": "id",
                         "in": "path",
@@ -480,6 +480,3443 @@ const docTemplate = `{
                     }
                 }
             }
+        },
+        "/bot-runtime/archive": {
+            "get": {
+                "security": [
+                    {
+                        "TelegramInitData": []
+                    }
+                ],
+                "description": "Belgilangan davr uchun amaliyot/ko'rsatkich arxivi",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Archive"
+                ],
+                "summary": "Arxiv ma'lumotlari",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Turi (practice, indicator yoki bo'sh — hammasi)",
+                        "name": "kind",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Boshlanish sanasi (YYYY-MM-DD)",
+                        "name": "from",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Tugash sanasi (YYYY-MM-DD)",
+                        "name": "to",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_internal_dto.ArchiveResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody"
+                        }
+                    }
+                }
+            }
+        },
+        "/bot-runtime/config": {
+            "get": {
+                "security": [
+                    {
+                        "BotToken": []
+                    }
+                ],
+                "description": "Bot servisi uchun token va /start sozlamalarini qaytaradi (bot token kerak)",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Bot Runtime"
+                ],
+                "summary": "Bot runtime konfiguratsiyasi",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_internal_dto.BotRuntimeConfigResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody"
+                        }
+                    }
+                }
+            }
+        },
+        "/bot-runtime/dominants": {
+            "get": {
+                "security": [
+                    {
+                        "TelegramInitData": []
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Dominants"
+                ],
+                "summary": "Dominantlar ro'yxati",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_internal_dto.DominantListResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "security": [
+                    {
+                        "TelegramInitData": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Dominants"
+                ],
+                "summary": "Yangi dominant yaratish",
+                "parameters": [
+                    {
+                        "description": "Dominant ma'lumotlari",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_internal_dto.CreateDominantRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_internal_dto.DominantResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody"
+                        }
+                    }
+                }
+            }
+        },
+        "/bot-runtime/dominants/{id}": {
+            "put": {
+                "security": [
+                    {
+                        "TelegramInitData": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Dominants"
+                ],
+                "summary": "Dominantni yangilash",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Dominant ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Yangilangan ma'lumotlar",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_internal_dto.UpdateDominantRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_internal_dto.DominantResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "security": [
+                    {
+                        "TelegramInitData": []
+                    }
+                ],
+                "tags": [
+                    "Dominants"
+                ],
+                "summary": "Dominantni o'chirish",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Dominant ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "No Content"
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody"
+                        }
+                    }
+                }
+            }
+        },
+        "/bot-runtime/dominants/{id}/session": {
+            "post": {
+                "security": [
+                    {
+                        "TelegramInitData": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Dominants"
+                ],
+                "summary": "Dominant sessiyasini yakunlash",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Dominant ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Sessiya ma'lumotlari",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_internal_dto.CompleteDominantSessionRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_internal_dto.DominantResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody"
+                        }
+                    }
+                }
+            }
+        },
+        "/bot-runtime/guides/courses": {
+            "get": {
+                "security": [
+                    {
+                        "TelegramInitData": []
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Guide Courses"
+                ],
+                "summary": "Kurslar ro'yxati (WebApp)",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_internal_dto.GuideCourseListResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody"
+                        }
+                    }
+                }
+            }
+        },
+        "/bot-runtime/guides/courses/{id}": {
+            "get": {
+                "security": [
+                    {
+                        "TelegramInitData": []
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Guide Courses"
+                ],
+                "summary": "Kurs tafsilotlari (WebApp)",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Kurs slug yoki ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_internal_dto.GuideCourseResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody"
+                        }
+                    }
+                }
+            }
+        },
+        "/bot-runtime/guides/files": {
+            "get": {
+                "security": [
+                    {
+                        "TelegramInitData": []
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Guide Files"
+                ],
+                "summary": "Fayllar ro'yxati (WebApp)",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_internal_dto.GuideFileListResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody"
+                        }
+                    }
+                }
+            }
+        },
+        "/bot-runtime/guides/lessons/{lessonId}": {
+            "get": {
+                "security": [
+                    {
+                        "TelegramInitData": []
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Guide Courses"
+                ],
+                "summary": "Dars tafsilotlari (WebApp)",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Dars ID",
+                        "name": "lessonId",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_internal_dto.GuideLessonResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody"
+                        }
+                    }
+                }
+            }
+        },
+        "/bot-runtime/guides/videos": {
+            "get": {
+                "security": [
+                    {
+                        "TelegramInitData": []
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Guide Videos"
+                ],
+                "summary": "Qo'llanma videolari ro'yxati (WebApp)",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_internal_dto.GuideVideoListResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody"
+                        }
+                    }
+                }
+            }
+        },
+        "/bot-runtime/guides/videos/{id}": {
+            "get": {
+                "security": [
+                    {
+                        "TelegramInitData": []
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Guide Videos"
+                ],
+                "summary": "Qo'llanma videosi (WebApp)",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Video ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_internal_dto.GuideVideoResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody"
+                        }
+                    }
+                }
+            }
+        },
+        "/bot-runtime/guides/videos/{id}/comments": {
+            "get": {
+                "security": [
+                    {
+                        "TelegramInitData": []
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Guide Videos"
+                ],
+                "summary": "Video izohlari ro'yxati",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Video ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_internal_dto.GuideVideoCommentListResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "security": [
+                    {
+                        "TelegramInitData": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Guide Videos"
+                ],
+                "summary": "Videoga izoh qo'shish",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Video ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Izoh matni",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_internal_dto.CreateGuideVideoCommentRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_internal_dto.GuideVideoCommentResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody"
+                        }
+                    }
+                }
+            }
+        },
+        "/bot-runtime/guides/videos/{id}/like": {
+            "post": {
+                "security": [
+                    {
+                        "TelegramInitData": []
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Guide Videos"
+                ],
+                "summary": "Videoga like qo'yish/olib tashlash",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Video ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_internal_dto.GuideVideoLikeResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody"
+                        }
+                    }
+                }
+            }
+        },
+        "/bot-runtime/habits/summary": {
+            "get": {
+                "security": [
+                    {
+                        "TelegramInitData": []
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Habits"
+                ],
+                "summary": "Odatlar xulosasi",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Turi (practice yoki indicator)",
+                        "name": "kind",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_internal_dto.HabitSummaryResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody"
+                        }
+                    }
+                }
+            }
+        },
+        "/bot-runtime/indicators": {
+            "get": {
+                "security": [
+                    {
+                        "TelegramInitData": []
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Indicators"
+                ],
+                "summary": "Ko'rsatkichlar ro'yxati",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_internal_dto.IndicatorListResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "security": [
+                    {
+                        "TelegramInitData": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Indicators"
+                ],
+                "summary": "Yangi ko'rsatkich yaratish",
+                "parameters": [
+                    {
+                        "description": "Ko'rsatkich ma'lumotlari",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_internal_dto.CreateIndicatorRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_internal_dto.IndicatorResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody"
+                        }
+                    }
+                }
+            }
+        },
+        "/bot-runtime/indicators/history": {
+            "get": {
+                "security": [
+                    {
+                        "TelegramInitData": []
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Indicators"
+                ],
+                "summary": "Ko'rsatkichlar tarixi",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Boshlanish sanasi (YYYY-MM-DD)",
+                        "name": "from",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Tugash sanasi (YYYY-MM-DD)",
+                        "name": "to",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_internal_dto.IndicatorHistoryResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody"
+                        }
+                    }
+                }
+            }
+        },
+        "/bot-runtime/indicators/{id}": {
+            "put": {
+                "security": [
+                    {
+                        "TelegramInitData": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Indicators"
+                ],
+                "summary": "Ko'rsatkichni yangilash",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Ko'rsatkich ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Yangilangan ma'lumotlar",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_internal_dto.UpdateIndicatorRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_internal_dto.IndicatorResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "security": [
+                    {
+                        "TelegramInitData": []
+                    }
+                ],
+                "tags": [
+                    "Indicators"
+                ],
+                "summary": "Ko'rsatkichni o'chirish",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Ko'rsatkich ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "No Content"
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody"
+                        }
+                    }
+                }
+            }
+        },
+        "/bot-runtime/indicators/{id}/log": {
+            "post": {
+                "security": [
+                    {
+                        "TelegramInitData": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Indicators"
+                ],
+                "summary": "Ko'rsatkich qiymatini yozish",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Ko'rsatkich ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Qiymat ma'lumotlari",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_internal_dto.LogIndicatorRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_internal_dto.IndicatorResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody"
+                        }
+                    }
+                }
+            }
+        },
+        "/bot-runtime/leaderboard": {
+            "get": {
+                "security": [
+                    {
+                        "TelegramInitData": []
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Leaderboard"
+                ],
+                "summary": "Reyting jadvali (WebApp)",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Natijalar soni (default 20)",
+                        "name": "limit",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_internal_dto.LeaderboardResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody"
+                        }
+                    }
+                }
+            }
+        },
+        "/bot-runtime/me": {
+            "post": {
+                "security": [
+                    {
+                        "TelegramInitData": []
+                    }
+                ],
+                "description": "Telegram initData orqali joriy foydalanuvchi ma'lumotini qaytaradi",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Bot Runtime"
+                ],
+                "summary": "WebApp foydalanuvchisi o'z ma'lumoti",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_internal_dto.BotUserResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody"
+                        }
+                    }
+                }
+            }
+        },
+        "/bot-runtime/notifications": {
+            "get": {
+                "security": [
+                    {
+                        "TelegramInitData": []
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Notifications"
+                ],
+                "summary": "Foydalanuvchi bildirishnomalari",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_internal_dto.UserNotificationListResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody"
+                        }
+                    }
+                }
+            }
+        },
+        "/bot-runtime/notifications/read-all": {
+            "post": {
+                "security": [
+                    {
+                        "TelegramInitData": []
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Notifications"
+                ],
+                "summary": "Barcha bildirishnomalarni o'qilgan deb belgilash",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_internal_dto.UnreadCountResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody"
+                        }
+                    }
+                }
+            }
+        },
+        "/bot-runtime/notifications/{id}/read": {
+            "post": {
+                "security": [
+                    {
+                        "TelegramInitData": []
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Notifications"
+                ],
+                "summary": "Bildirishnomani o'qilgan deb belgilash",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Delivery ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_internal_dto.UnreadCountResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody"
+                        }
+                    }
+                }
+            }
+        },
+        "/bot-runtime/practices": {
+            "get": {
+                "security": [
+                    {
+                        "TelegramInitData": []
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Practices"
+                ],
+                "summary": "Amaliyotlar ro'yxati",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_internal_dto.PracticeListResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "security": [
+                    {
+                        "TelegramInitData": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Practices"
+                ],
+                "summary": "Yangi amaliyot yaratish",
+                "parameters": [
+                    {
+                        "description": "Amaliyot ma'lumotlari",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_internal_dto.CreatePracticeRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_internal_dto.PracticeResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody"
+                        }
+                    }
+                }
+            }
+        },
+        "/bot-runtime/practices/history": {
+            "get": {
+                "security": [
+                    {
+                        "TelegramInitData": []
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Practices"
+                ],
+                "summary": "Amaliyotlar tarixi",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Boshlanish sanasi (YYYY-MM-DD)",
+                        "name": "from",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Tugash sanasi (YYYY-MM-DD)",
+                        "name": "to",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_internal_dto.PracticeHistoryResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody"
+                        }
+                    }
+                }
+            }
+        },
+        "/bot-runtime/practices/{id}": {
+            "put": {
+                "security": [
+                    {
+                        "TelegramInitData": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Practices"
+                ],
+                "summary": "Amaliyotni yangilash",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Amaliyot ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Yangilangan ma'lumotlar",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_internal_dto.UpdatePracticeRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_internal_dto.PracticeResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "security": [
+                    {
+                        "TelegramInitData": []
+                    }
+                ],
+                "tags": [
+                    "Practices"
+                ],
+                "summary": "Amaliyotni o'chirish",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Amaliyot ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "No Content"
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody"
+                        }
+                    }
+                }
+            }
+        },
+        "/bot-runtime/practices/{id}/toggle": {
+            "post": {
+                "security": [
+                    {
+                        "TelegramInitData": []
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Practices"
+                ],
+                "summary": "Amaliyotni bajarilgan/bajarilmagan qilish",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Amaliyot ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_internal_dto.PracticeResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody"
+                        }
+                    }
+                }
+            }
+        },
+        "/bot-runtime/start": {
+            "post": {
+                "security": [
+                    {
+                        "BotToken": []
+                    }
+                ],
+                "description": "Bot /start bosilganda foydalanuvchini saqlaydi yoki yangilaydi",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Bot Runtime"
+                ],
+                "summary": "Foydalanuvchi /start hodisasi",
+                "parameters": [
+                    {
+                        "description": "Foydalanuvchi ma'lumotlari",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_internal_dto.BotStartUserRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_internal_dto.BotUserResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody"
+                        }
+                    }
+                }
+            }
+        },
+        "/bot-runtime/webapp/open": {
+            "post": {
+                "security": [
+                    {
+                        "TelegramInitData": []
+                    }
+                ],
+                "description": "WebApp ichidan foydalanuvchi ma'lumotini saqlaydi/yangilaydi (Telegram initData kerak)",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Bot Runtime"
+                ],
+                "summary": "WebApp ochilgan hodisasi",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_internal_dto.BotUserResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody"
+                        }
+                    }
+                }
+            }
+        },
+        "/bot-runtime/ws/notifications": {
+            "get": {
+                "description": "Real-time bildirishnomalar uchun WebSocket ulanishi. initData query parametr orqali autentifikatsiya.",
+                "tags": [
+                    "Notifications"
+                ],
+                "summary": "Bildirishnomalar WebSocket",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Telegram WebApp initData",
+                        "name": "initData",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "101": {
+                        "description": "Switching Protocols"
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody"
+                        }
+                    }
+                }
+            }
+        },
+        "/bot/guides/courses": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Guide Courses"
+                ],
+                "summary": "Qo'llanma kurslari ro'yxati (admin)",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_internal_dto.GuideCourseListResponse"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Guide Courses"
+                ],
+                "summary": "Yangi qo'llanma kursi",
+                "parameters": [
+                    {
+                        "description": "Kurs",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_internal_dto.CreateGuideCourseRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_internal_dto.GuideCourseResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/bot/guides/courses/{id}": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Guide Courses"
+                ],
+                "summary": "Bitta qo'llanma kursi (admin)",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Kurs slug yoki ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_internal_dto.GuideCourseResponse"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Guide Courses"
+                ],
+                "summary": "Qo'llanma kursini yangilash",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Kurs slug yoki ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Kurs",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_internal_dto.UpdateGuideCourseRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_internal_dto.GuideCourseResponse"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "tags": [
+                    "Guide Courses"
+                ],
+                "summary": "Qo'llanma kursini o'chirish",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Kurs slug yoki ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "No Content"
+                    }
+                }
+            }
+        },
+        "/bot/guides/files": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Guide Files"
+                ],
+                "summary": "Qo'llanma fayllari ro'yxati (admin)",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_internal_dto.GuideFileListResponse"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Guide Files"
+                ],
+                "summary": "Yangi qo'llanma fayli",
+                "parameters": [
+                    {
+                        "description": "Fayl",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_internal_dto.CreateGuideFileRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_internal_dto.GuideFileResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/bot/guides/files/{id}": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Guide Files"
+                ],
+                "summary": "Bitta qo'llanma fayli (admin)",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Fayl slug yoki ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_internal_dto.GuideFileResponse"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Guide Files"
+                ],
+                "summary": "Qo'llanma faylini yangilash",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Fayl slug yoki ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Fayl",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_internal_dto.UpdateGuideFileRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_internal_dto.GuideFileResponse"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "tags": [
+                    "Guide Files"
+                ],
+                "summary": "Qo'llanma faylini o'chirish",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Fayl slug yoki ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "No Content"
+                    }
+                }
+            }
+        },
+        "/bot/guides/upload/file": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Hujjat fayl (pdf, txt, doc, docx, zip va boshqalar)",
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Guide Files"
+                ],
+                "summary": "Qo'llanma fayli yuklash",
+                "parameters": [
+                    {
+                        "type": "file",
+                        "description": "Fayl",
+                        "name": "file",
+                        "in": "formData",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_pkg_upload.SavedFile"
+                        }
+                    }
+                }
+            }
+        },
+        "/bot/guides/upload/poster": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Faqat rasm fayli (jpg, png, webp, gif). JSON orqali URL qabul qilinmaydi.",
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Guide Videos"
+                ],
+                "summary": "Poster rasm yuklash",
+                "parameters": [
+                    {
+                        "type": "file",
+                        "description": "Poster rasm",
+                        "name": "file",
+                        "in": "formData",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_pkg_upload.SavedFile"
+                        }
+                    }
+                }
+            }
+        },
+        "/bot/guides/upload/video": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Video fayl (mp4, webm, mov). Tashqi URL o'rniga yuklangan path ishlatiladi.",
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Guide Videos"
+                ],
+                "summary": "Video fayl yuklash",
+                "parameters": [
+                    {
+                        "type": "file",
+                        "description": "Video fayl",
+                        "name": "file",
+                        "in": "formData",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_pkg_upload.SavedFile"
+                        }
+                    }
+                }
+            }
+        },
+        "/bot/guides/videos": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Guide Videos"
+                ],
+                "summary": "Qo'llanma videolari ro'yxati (admin)",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_internal_dto.GuideVideoListResponse"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Guide Videos"
+                ],
+                "summary": "Yangi qo'llanma videosi",
+                "parameters": [
+                    {
+                        "description": "Video",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_internal_dto.CreateGuideVideoRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_internal_dto.GuideVideoResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/bot/guides/videos/{id}": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Guide Videos"
+                ],
+                "summary": "Bitta qo'llanma videosi (admin)",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Video ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_internal_dto.GuideVideoResponse"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Guide Videos"
+                ],
+                "summary": "Qo'llanma videosini yangilash",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Video ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Video",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_internal_dto.UpdateGuideVideoRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_internal_dto.GuideVideoResponse"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "tags": [
+                    "Guide Videos"
+                ],
+                "summary": "Qo'llanma videosini o'chirish",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Video ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "No Content"
+                    }
+                }
+            }
+        },
+        "/bot/leaderboard": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "XP bo'yicha eng yuqori foydalanuvchilar (telegram_id, username bilan)",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Bot Stats"
+                ],
+                "summary": "Admin XP reytingi",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "default": 20,
+                        "description": "Limit",
+                        "name": "limit",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_internal_dto.AdminLeaderboardResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody"
+                        }
+                    }
+                }
+            }
+        },
+        "/bot/notifications": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Notifications"
+                ],
+                "summary": "Bildirishnomalar ro'yxati (admin)",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_internal_dto.NotificationListResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Notifications"
+                ],
+                "summary": "Yangi bildirishnoma yaratish (admin)",
+                "parameters": [
+                    {
+                        "description": "Bildirishnoma ma'lumotlari",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_internal_dto.CreateNotificationRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_internal_dto.NotificationResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody"
+                        }
+                    }
+                }
+            }
+        },
+        "/bot/notifications/{id}": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Notifications"
+                ],
+                "summary": "Bildirishnoma tafsilotlari (admin)",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Bildirishnoma ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_internal_dto.NotificationResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Notifications"
+                ],
+                "summary": "Bildirishnomani yangilash (admin)",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Bildirishnoma ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Yangilangan ma'lumotlar",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_internal_dto.UpdateNotificationRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_internal_dto.NotificationResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "tags": [
+                    "Notifications"
+                ],
+                "summary": "Bildirishnomani o'chirish (admin)",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Bildirishnoma ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "No Content"
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody"
+                        }
+                    }
+                }
+            }
+        },
+        "/bot/notifications/{id}/send": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Draft holatdagi bildirishnomani foydalanuvchilarga yuboradi",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Notifications"
+                ],
+                "summary": "Bildirishnomani yuborish (admin)",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Bildirishnoma ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_internal_dto.NotificationResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody"
+                        }
+                    }
+                }
+            }
+        },
+        "/bot/settings": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Token va /start sozlamalarini qaytaradi",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Bot Settings"
+                ],
+                "summary": "Bot sozlamalarini olish",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_internal_dto.BotSettingsResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Start xabari va pastki tugmani sozlash",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Bot Settings"
+                ],
+                "summary": "/start sozlamalarini yangilash",
+                "parameters": [
+                    {
+                        "description": "Start sozlamalari",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_internal_dto.UpdateBotSettingsRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_internal_dto.BotSettingsResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody"
+                        }
+                    }
+                }
+            }
+        },
+        "/bot/stats": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Foydalanuvchilar, amaliyotlar, indikatorlar, dominantalar va XP bo'yicha umumiy ko'rsatkichlar",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Bot Stats"
+                ],
+                "summary": "Admin statistikasi",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_internal_dto.AdminStatsResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody"
+                        }
+                    }
+                }
+            }
+        },
+        "/bot/token": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Bot Settings"
+                ],
+                "summary": "Bot token holati",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_internal_dto.BotTokenResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Bot Settings"
+                ],
+                "summary": "Bot token qo'shish/yangilash",
+                "parameters": [
+                    {
+                        "description": "Bot token",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_internal_dto.UpdateBotTokenRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_internal_dto.BotTokenResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Bot Settings"
+                ],
+                "summary": "Bot tokenni o'chirish",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_internal_dto.BotTokenResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody"
+                        }
+                    }
+                }
+            }
+        },
+        "/bot/users": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Botga start bosgan foydalanuvchilar ro'yxati",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Bot Settings"
+                ],
+                "summary": "/start bosgan foydalanuvchilar",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "default": 1,
+                        "description": "Sahifa",
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "default": 10,
+                        "description": "Limit",
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Qidiruv",
+                        "name": "search",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_internal_dto.BotUserListResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody"
+                        }
+                    }
+                }
+            }
+        },
+        "/bot/users/{id}": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Tanlangan foydalanuvchi uchun to'liq ma'lumotlarni qaytaradi",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Bot Settings"
+                ],
+                "summary": "Bitta bot foydalanuvchi tafsiloti",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Bot user ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_internal_dto.BotUserResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody"
+                        }
+                    }
+                }
+            }
+        },
+        "/bot/users/{id}/activity": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Amaliyot bajarilishlari, indikator kiritishlari va dominanta sessiyalarini xronologik tartibda qaytaradi",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Bot Monitoring"
+                ],
+                "summary": "Foydalanuvchi faoliyat lentasi",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Bot user ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Boshlanish sanasi (YYYY-MM-DD)",
+                        "name": "from",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Tugash sanasi (YYYY-MM-DD)",
+                        "name": "to",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "default": 50,
+                        "description": "Limit",
+                        "name": "limit",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_internal_dto.UserActivityResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody"
+                        }
+                    }
+                }
+            }
+        },
+        "/bot/users/{id}/monitoring": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Bitta foydalanuvchi bo'yicha profil, umumiy ko'rsatkichlar, amaliyot/indikator/dominanta tafsilotlari va so'nggi faoliyat lentasi",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Bot Monitoring"
+                ],
+                "summary": "Foydalanuvchini to'liq monitoring",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Bot user ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_internal_dto.UserMonitoringResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_pkg_response.ErrorBody"
+                        }
+                    }
+                }
+            }
+        },
+        "/bot/xp-settings": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "xp-settings"
+                ],
+                "summary": "XP sozlamalarini olish",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_internal_dto.XPSettingsResponse"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "xp-settings"
+                ],
+                "summary": "XP sozlamalarini yangilash",
+                "parameters": [
+                    {
+                        "description": "XP sozlamalari",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_internal_dto.UpdateXPSettingsRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_odatlar-bot_backend_internal_dto.XPSettingsResponse"
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
@@ -493,6 +3930,63 @@ const docTemplate = `{
                 "AdminStatusActive",
                 "AdminStatusInactive"
             ]
+        },
+        "github_com_odatlar-bot_backend_internal_dto.AdminActivityStats": {
+            "type": "object",
+            "properties": {
+                "entries_today": {
+                    "type": "integer"
+                },
+                "total_entries": {
+                    "type": "integer"
+                },
+                "total_items": {
+                    "type": "integer"
+                }
+            }
+        },
+        "github_com_odatlar-bot_backend_internal_dto.AdminLeaderboardEntry": {
+            "type": "object",
+            "properties": {
+                "bot_user_id": {
+                    "type": "integer"
+                },
+                "level": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "rank": {
+                    "type": "integer"
+                },
+                "telegram_id": {
+                    "type": "integer"
+                },
+                "username": {
+                    "type": "string"
+                },
+                "xp": {
+                    "type": "integer"
+                }
+            }
+        },
+        "github_com_odatlar-bot_backend_internal_dto.AdminLeaderboardResponse": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/github_com_odatlar-bot_backend_internal_dto.AdminLeaderboardEntry"
+                    }
+                },
+                "limit": {
+                    "type": "integer"
+                },
+                "total": {
+                    "type": "integer"
+                }
+            }
         },
         "github_com_odatlar-bot_backend_internal_dto.AdminListResponse": {
             "type": "object",
@@ -524,7 +4018,7 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "id": {
-                    "type": "integer"
+                    "type": "string"
                 },
                 "last_name": {
                     "type": "string"
@@ -540,6 +4034,345 @@ const docTemplate = `{
                 },
                 "username": {
                     "type": "string"
+                }
+            }
+        },
+        "github_com_odatlar-bot_backend_internal_dto.AdminStatsResponse": {
+            "type": "object",
+            "properties": {
+                "dominants": {
+                    "$ref": "#/definitions/github_com_odatlar-bot_backend_internal_dto.AdminActivityStats"
+                },
+                "generated_at": {
+                    "type": "string"
+                },
+                "indicators": {
+                    "$ref": "#/definitions/github_com_odatlar-bot_backend_internal_dto.AdminActivityStats"
+                },
+                "practices": {
+                    "$ref": "#/definitions/github_com_odatlar-bot_backend_internal_dto.AdminActivityStats"
+                },
+                "users": {
+                    "$ref": "#/definitions/github_com_odatlar-bot_backend_internal_dto.AdminUserStats"
+                },
+                "xp": {
+                    "$ref": "#/definitions/github_com_odatlar-bot_backend_internal_dto.AdminXPStats"
+                }
+            }
+        },
+        "github_com_odatlar-bot_backend_internal_dto.AdminUserStats": {
+            "type": "object",
+            "properties": {
+                "active_this_week": {
+                    "type": "integer"
+                },
+                "new_this_week": {
+                    "type": "integer"
+                },
+                "new_today": {
+                    "type": "integer"
+                },
+                "premium": {
+                    "type": "integer"
+                },
+                "total": {
+                    "type": "integer"
+                },
+                "with_phone": {
+                    "type": "integer"
+                }
+            }
+        },
+        "github_com_odatlar-bot_backend_internal_dto.AdminXPStats": {
+            "type": "object",
+            "properties": {
+                "avg_level": {
+                    "type": "number"
+                },
+                "avg_xp": {
+                    "type": "number"
+                },
+                "level_up_xp": {
+                    "type": "integer"
+                },
+                "max_level": {
+                    "type": "integer"
+                },
+                "max_xp": {
+                    "type": "integer"
+                },
+                "total_xp": {
+                    "type": "integer"
+                }
+            }
+        },
+        "github_com_odatlar-bot_backend_internal_dto.ArchiveDayItemResponse": {
+            "type": "object",
+            "properties": {
+                "completedAt": {
+                    "type": "string"
+                },
+                "date": {
+                    "type": "string"
+                },
+                "habitId": {
+                    "type": "string"
+                },
+                "habitName": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "kind": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "string"
+                },
+                "valueLabel": {
+                    "type": "string"
+                }
+            }
+        },
+        "github_com_odatlar-bot_backend_internal_dto.ArchiveDayResponse": {
+            "type": "object",
+            "properties": {
+                "date": {
+                    "type": "string"
+                },
+                "items": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/github_com_odatlar-bot_backend_internal_dto.ArchiveDayItemResponse"
+                    }
+                }
+            }
+        },
+        "github_com_odatlar-bot_backend_internal_dto.ArchiveResponse": {
+            "type": "object",
+            "properties": {
+                "completedCount": {
+                    "type": "integer"
+                },
+                "days": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/github_com_odatlar-bot_backend_internal_dto.ArchiveDayResponse"
+                    }
+                },
+                "missedCount": {
+                    "type": "integer"
+                }
+            }
+        },
+        "github_com_odatlar-bot_backend_internal_dto.BotRuntimeConfigResponse": {
+            "type": "object",
+            "properties": {
+                "bot_token": {
+                    "type": "string"
+                },
+                "bot_username": {
+                    "type": "string"
+                },
+                "is_active": {
+                    "type": "boolean"
+                },
+                "start": {
+                    "$ref": "#/definitions/github_com_odatlar-bot_backend_internal_dto.BotStartDTO"
+                },
+                "updated_at": {
+                    "type": "string"
+                }
+            }
+        },
+        "github_com_odatlar-bot_backend_internal_dto.BotSettingsResponse": {
+            "type": "object",
+            "properties": {
+                "start": {
+                    "$ref": "#/definitions/github_com_odatlar-bot_backend_internal_dto.BotStartDTO"
+                },
+                "token": {
+                    "$ref": "#/definitions/github_com_odatlar-bot_backend_internal_dto.BotTokenResponse"
+                },
+                "updated_at": {
+                    "type": "string"
+                }
+            }
+        },
+        "github_com_odatlar-bot_backend_internal_dto.BotStartDTO": {
+            "type": "object",
+            "required": [
+                "message"
+            ],
+            "properties": {
+                "button": {
+                    "$ref": "#/definitions/github_com_odatlar-bot_backend_internal_dto.StartButtonDTO"
+                },
+                "message": {
+                    "type": "string",
+                    "maxLength": 4096
+                }
+            }
+        },
+        "github_com_odatlar-bot_backend_internal_dto.BotStartUserRequest": {
+            "type": "object",
+            "required": [
+                "telegram_id"
+            ],
+            "properties": {
+                "avatar_url": {
+                    "type": "string",
+                    "maxLength": 500
+                },
+                "first_name": {
+                    "type": "string",
+                    "maxLength": 100
+                },
+                "is_bot": {
+                    "type": "boolean"
+                },
+                "is_premium": {
+                    "type": "boolean"
+                },
+                "language_code": {
+                    "type": "string",
+                    "maxLength": 10
+                },
+                "last_name": {
+                    "type": "string",
+                    "maxLength": 100
+                },
+                "phone": {
+                    "type": "string",
+                    "maxLength": 20
+                },
+                "telegram_id": {
+                    "type": "integer"
+                },
+                "username": {
+                    "type": "string",
+                    "maxLength": 100
+                }
+            }
+        },
+        "github_com_odatlar-bot_backend_internal_dto.BotTokenResponse": {
+            "type": "object",
+            "properties": {
+                "bot_username": {
+                    "type": "string"
+                },
+                "has_token": {
+                    "type": "boolean"
+                },
+                "is_active": {
+                    "type": "boolean"
+                },
+                "masked_token": {
+                    "type": "string"
+                }
+            }
+        },
+        "github_com_odatlar-bot_backend_internal_dto.BotUserListResponse": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/github_com_odatlar-bot_backend_internal_dto.BotUserResponse"
+                    }
+                },
+                "limit": {
+                    "type": "integer"
+                },
+                "page": {
+                    "type": "integer"
+                },
+                "total": {
+                    "type": "integer"
+                }
+            }
+        },
+        "github_com_odatlar-bot_backend_internal_dto.BotUserResponse": {
+            "type": "object",
+            "properties": {
+                "avatar_url": {
+                    "type": "string"
+                },
+                "first_name": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "is_bot": {
+                    "type": "boolean"
+                },
+                "is_premium": {
+                    "type": "boolean"
+                },
+                "language_code": {
+                    "type": "string"
+                },
+                "last_name": {
+                    "type": "string"
+                },
+                "last_start_at": {
+                    "type": "string"
+                },
+                "level": {
+                    "type": "integer"
+                },
+                "level_up_xp": {
+                    "type": "integer"
+                },
+                "phone": {
+                    "type": "string"
+                },
+                "started_at": {
+                    "type": "string"
+                },
+                "telegram_id": {
+                    "type": "integer"
+                },
+                "username": {
+                    "type": "string"
+                },
+                "xp": {
+                    "type": "integer"
+                }
+            }
+        },
+        "github_com_odatlar-bot_backend_internal_dto.CompleteDominantSessionRequest": {
+            "type": "object",
+            "required": [
+                "type"
+            ],
+            "properties": {
+                "cons": {
+                    "type": "array",
+                    "maxItems": 50,
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "notes": {
+                    "type": "string",
+                    "maxLength": 5000
+                },
+                "pros": {
+                    "type": "array",
+                    "maxItems": 50,
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "type": {
+                    "type": "string",
+                    "enum": [
+                        "fikrlash",
+                        "malumot"
+                    ]
                 }
             }
         },
@@ -580,6 +4413,755 @@ const docTemplate = `{
                 }
             }
         },
+        "github_com_odatlar-bot_backend_internal_dto.CreateDominantRequest": {
+            "type": "object",
+            "required": [
+                "title",
+                "type"
+            ],
+            "properties": {
+                "cons": {
+                    "type": "array",
+                    "maxItems": 50,
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "cue": {
+                    "type": "string",
+                    "maxLength": 1000
+                },
+                "notes": {
+                    "type": "string",
+                    "maxLength": 5000
+                },
+                "pros": {
+                    "type": "array",
+                    "maxItems": 50,
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "reward": {
+                    "type": "string",
+                    "maxLength": 1000
+                },
+                "title": {
+                    "type": "string",
+                    "maxLength": 255,
+                    "minLength": 1
+                },
+                "type": {
+                    "type": "string",
+                    "enum": [
+                        "fikrlash",
+                        "malumot"
+                    ]
+                }
+            }
+        },
+        "github_com_odatlar-bot_backend_internal_dto.CreateGuideCourseRequest": {
+            "type": "object",
+            "required": [
+                "children",
+                "slug",
+                "title"
+            ],
+            "properties": {
+                "children": {
+                    "type": "array",
+                    "items": {
+                        "type": "integer"
+                    }
+                },
+                "description": {
+                    "type": "string",
+                    "maxLength": 5000
+                },
+                "is_published": {
+                    "type": "boolean"
+                },
+                "slug": {
+                    "type": "string",
+                    "maxLength": 100,
+                    "minLength": 1
+                },
+                "sort_order": {
+                    "type": "integer"
+                },
+                "title": {
+                    "type": "string",
+                    "maxLength": 255,
+                    "minLength": 1
+                }
+            }
+        },
+        "github_com_odatlar-bot_backend_internal_dto.CreateGuideFileRequest": {
+            "type": "object",
+            "required": [
+                "ext",
+                "slug",
+                "title",
+                "url"
+            ],
+            "properties": {
+                "description": {
+                    "type": "string",
+                    "maxLength": 5000
+                },
+                "ext": {
+                    "type": "string",
+                    "maxLength": 20,
+                    "minLength": 1
+                },
+                "is_published": {
+                    "type": "boolean"
+                },
+                "size_bytes": {
+                    "type": "integer",
+                    "minimum": 0
+                },
+                "slug": {
+                    "type": "string",
+                    "maxLength": 100,
+                    "minLength": 1
+                },
+                "sort_order": {
+                    "type": "integer"
+                },
+                "title": {
+                    "type": "string",
+                    "maxLength": 255,
+                    "minLength": 1
+                },
+                "url": {
+                    "type": "string"
+                }
+            }
+        },
+        "github_com_odatlar-bot_backend_internal_dto.CreateGuideVideoCommentRequest": {
+            "type": "object",
+            "required": [
+                "text"
+            ],
+            "properties": {
+                "text": {
+                    "type": "string",
+                    "maxLength": 2000,
+                    "minLength": 1
+                }
+            }
+        },
+        "github_com_odatlar-bot_backend_internal_dto.CreateGuideVideoRequest": {
+            "type": "object",
+            "required": [
+                "src",
+                "title"
+            ],
+            "properties": {
+                "description": {
+                    "type": "string",
+                    "maxLength": 5000
+                },
+                "duration_min": {
+                    "type": "integer",
+                    "minimum": 0
+                },
+                "is_published": {
+                    "type": "boolean"
+                },
+                "poster": {
+                    "type": "string"
+                },
+                "sort_order": {
+                    "type": "integer"
+                },
+                "src": {
+                    "type": "string"
+                },
+                "title": {
+                    "type": "string",
+                    "maxLength": 255,
+                    "minLength": 1
+                }
+            }
+        },
+        "github_com_odatlar-bot_backend_internal_dto.CreateIndicatorRequest": {
+            "type": "object",
+            "required": [
+                "name"
+            ],
+            "properties": {
+                "benefits": {
+                    "type": "array",
+                    "maxItems": 20,
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "name": {
+                    "type": "string",
+                    "maxLength": 255,
+                    "minLength": 1
+                }
+            }
+        },
+        "github_com_odatlar-bot_backend_internal_dto.CreateNotificationRequest": {
+            "type": "object",
+            "required": [
+                "title",
+                "type"
+            ],
+            "properties": {
+                "payload": {
+                    "type": "array",
+                    "items": {
+                        "type": "integer"
+                    }
+                },
+                "preview": {
+                    "type": "string",
+                    "maxLength": 2000
+                },
+                "target": {
+                    "type": "string",
+                    "enum": [
+                        "all",
+                        "selected"
+                    ]
+                },
+                "target_user_ids": {
+                    "type": "array",
+                    "items": {
+                        "type": "integer"
+                    }
+                },
+                "title": {
+                    "type": "string",
+                    "maxLength": 255,
+                    "minLength": 1
+                },
+                "type": {
+                    "type": "string"
+                }
+            }
+        },
+        "github_com_odatlar-bot_backend_internal_dto.CreatePracticeRequest": {
+            "type": "object",
+            "required": [
+                "name"
+            ],
+            "properties": {
+                "benefits": {
+                    "type": "array",
+                    "maxItems": 20,
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "name": {
+                    "type": "string",
+                    "maxLength": 255,
+                    "minLength": 1
+                }
+            }
+        },
+        "github_com_odatlar-bot_backend_internal_dto.DominantListResponse": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/github_com_odatlar-bot_backend_internal_dto.DominantResponse"
+                    }
+                }
+            }
+        },
+        "github_com_odatlar-bot_backend_internal_dto.DominantResponse": {
+            "type": "object",
+            "properties": {
+                "cons": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "createdAt": {
+                    "type": "string"
+                },
+                "cue": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "level": {
+                    "type": "integer"
+                },
+                "notes": {
+                    "type": "string"
+                },
+                "pros": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "reward": {
+                    "type": "string"
+                },
+                "sessionsCompleted": {
+                    "type": "integer"
+                },
+                "title": {
+                    "type": "string"
+                },
+                "type": {
+                    "type": "string"
+                },
+                "xp": {
+                    "type": "integer"
+                },
+                "xp_reward": {
+                    "type": "integer"
+                }
+            }
+        },
+        "github_com_odatlar-bot_backend_internal_dto.GuideCourseBreadcrumbItem": {
+            "type": "object",
+            "properties": {
+                "href": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "title": {
+                    "type": "string"
+                }
+            }
+        },
+        "github_com_odatlar-bot_backend_internal_dto.GuideCourseListResponse": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/github_com_odatlar-bot_backend_internal_dto.GuideCourseResponse"
+                    }
+                }
+            }
+        },
+        "github_com_odatlar-bot_backend_internal_dto.GuideCourseResponse": {
+            "type": "object",
+            "properties": {
+                "children": {
+                    "type": "array",
+                    "items": {
+                        "type": "integer"
+                    }
+                },
+                "createdAt": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "isPublished": {
+                    "type": "boolean"
+                },
+                "lessonCount": {
+                    "type": "integer"
+                },
+                "sectionCount": {
+                    "type": "integer"
+                },
+                "sortOrder": {
+                    "type": "integer"
+                },
+                "title": {
+                    "type": "string"
+                },
+                "updatedAt": {
+                    "type": "string"
+                }
+            }
+        },
+        "github_com_odatlar-bot_backend_internal_dto.GuideCourseSummary": {
+            "type": "object",
+            "properties": {
+                "description": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "title": {
+                    "type": "string"
+                }
+            }
+        },
+        "github_com_odatlar-bot_backend_internal_dto.GuideFileListResponse": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/github_com_odatlar-bot_backend_internal_dto.GuideFileResponse"
+                    }
+                }
+            }
+        },
+        "github_com_odatlar-bot_backend_internal_dto.GuideFileResponse": {
+            "type": "object",
+            "properties": {
+                "createdAt": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "ext": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "isPublished": {
+                    "type": "boolean"
+                },
+                "sizeBytes": {
+                    "type": "integer"
+                },
+                "sizeLabel": {
+                    "type": "string"
+                },
+                "sortOrder": {
+                    "type": "integer"
+                },
+                "title": {
+                    "type": "string"
+                },
+                "updatedAt": {
+                    "type": "string"
+                },
+                "url": {
+                    "type": "string"
+                }
+            }
+        },
+        "github_com_odatlar-bot_backend_internal_dto.GuideLessonResponse": {
+            "type": "object",
+            "properties": {
+                "breadcrumb": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/github_com_odatlar-bot_backend_internal_dto.GuideCourseBreadcrumbItem"
+                    }
+                },
+                "course": {
+                    "$ref": "#/definitions/github_com_odatlar-bot_backend_internal_dto.GuideCourseSummary"
+                },
+                "lesson": {
+                    "type": "array",
+                    "items": {
+                        "type": "integer"
+                    }
+                }
+            }
+        },
+        "github_com_odatlar-bot_backend_internal_dto.GuideVideoCommentListResponse": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/github_com_odatlar-bot_backend_internal_dto.GuideVideoCommentResponse"
+                    }
+                }
+            }
+        },
+        "github_com_odatlar-bot_backend_internal_dto.GuideVideoCommentResponse": {
+            "type": "object",
+            "properties": {
+                "authorAvatarUrl": {
+                    "type": "string"
+                },
+                "authorName": {
+                    "type": "string"
+                },
+                "createdAt": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "isMine": {
+                    "type": "boolean"
+                },
+                "text": {
+                    "type": "string"
+                }
+            }
+        },
+        "github_com_odatlar-bot_backend_internal_dto.GuideVideoLikeResponse": {
+            "type": "object",
+            "properties": {
+                "likedByMe": {
+                    "type": "boolean"
+                },
+                "likesCount": {
+                    "type": "integer"
+                }
+            }
+        },
+        "github_com_odatlar-bot_backend_internal_dto.GuideVideoListResponse": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/github_com_odatlar-bot_backend_internal_dto.GuideVideoResponse"
+                    }
+                }
+            }
+        },
+        "github_com_odatlar-bot_backend_internal_dto.GuideVideoResponse": {
+            "type": "object",
+            "properties": {
+                "commentsCount": {
+                    "type": "integer"
+                },
+                "createdAt": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "durationMin": {
+                    "type": "integer"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "isPublished": {
+                    "type": "boolean"
+                },
+                "likedByMe": {
+                    "type": "boolean"
+                },
+                "likesCount": {
+                    "type": "integer"
+                },
+                "poster": {
+                    "type": "string"
+                },
+                "sortOrder": {
+                    "type": "integer"
+                },
+                "src": {
+                    "type": "string"
+                },
+                "title": {
+                    "type": "string"
+                },
+                "updatedAt": {
+                    "type": "string"
+                }
+            }
+        },
+        "github_com_odatlar-bot_backend_internal_dto.HabitSummaryResponse": {
+            "type": "object",
+            "properties": {
+                "completed": {
+                    "type": "integer"
+                },
+                "percent": {
+                    "type": "integer"
+                },
+                "total": {
+                    "type": "integer"
+                },
+                "week": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/github_com_odatlar-bot_backend_internal_dto.HabitWeekDayResponse"
+                    }
+                }
+            }
+        },
+        "github_com_odatlar-bot_backend_internal_dto.HabitWeekDayResponse": {
+            "type": "object",
+            "properties": {
+                "date": {
+                    "type": "string"
+                },
+                "isToday": {
+                    "type": "boolean"
+                },
+                "label": {
+                    "type": "string"
+                },
+                "rate": {
+                    "type": "integer"
+                }
+            }
+        },
+        "github_com_odatlar-bot_backend_internal_dto.IndicatorHistoryEntryResponse": {
+            "type": "object",
+            "properties": {
+                "completedAt": {
+                    "type": "string"
+                },
+                "date": {
+                    "type": "string"
+                },
+                "habitId": {
+                    "type": "string"
+                },
+                "habitName": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "isEmpty": {
+                    "type": "boolean"
+                },
+                "kind": {
+                    "type": "string"
+                },
+                "numericValue": {
+                    "type": "number"
+                },
+                "valueId": {
+                    "type": "string"
+                },
+                "valueLabel": {
+                    "type": "string"
+                }
+            }
+        },
+        "github_com_odatlar-bot_backend_internal_dto.IndicatorHistoryResponse": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/github_com_odatlar-bot_backend_internal_dto.IndicatorHistoryEntryResponse"
+                    }
+                }
+            }
+        },
+        "github_com_odatlar-bot_backend_internal_dto.IndicatorListResponse": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/github_com_odatlar-bot_backend_internal_dto.IndicatorResponse"
+                    }
+                }
+            }
+        },
+        "github_com_odatlar-bot_backend_internal_dto.IndicatorResponse": {
+            "type": "object",
+            "properties": {
+                "benefits": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "completedToday": {
+                    "type": "boolean"
+                },
+                "createdAt": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "kind": {
+                    "type": "string"
+                },
+                "level": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "streak": {
+                    "type": "integer"
+                },
+                "todayIndicatorValue": {
+                    "type": "string"
+                },
+                "xp": {
+                    "type": "integer"
+                },
+                "xp_reward": {
+                    "type": "integer"
+                }
+            }
+        },
+        "github_com_odatlar-bot_backend_internal_dto.LeaderboardEntryResponse": {
+            "type": "object",
+            "properties": {
+                "is_me": {
+                    "type": "boolean"
+                },
+                "level": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "rank": {
+                    "type": "integer"
+                },
+                "xp": {
+                    "type": "integer"
+                }
+            }
+        },
+        "github_com_odatlar-bot_backend_internal_dto.LeaderboardResponse": {
+            "type": "object",
+            "properties": {
+                "current_user_rank": {
+                    "type": "integer"
+                },
+                "data": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/github_com_odatlar-bot_backend_internal_dto.LeaderboardEntryResponse"
+                    }
+                }
+            }
+        },
+        "github_com_odatlar-bot_backend_internal_dto.LogIndicatorRequest": {
+            "type": "object",
+            "required": [
+                "value_id",
+                "value_label"
+            ],
+            "properties": {
+                "is_empty": {
+                    "type": "boolean"
+                },
+                "value_id": {
+                    "type": "string",
+                    "maxLength": 100
+                },
+                "value_label": {
+                    "type": "string",
+                    "maxLength": 255
+                }
+            }
+        },
         "github_com_odatlar-bot_backend_internal_dto.LoginRequest": {
             "type": "object",
             "required": [
@@ -606,11 +5188,244 @@ const docTemplate = `{
                 }
             }
         },
+        "github_com_odatlar-bot_backend_internal_dto.MonitoredDominant": {
+            "type": "object",
+            "properties": {
+                "created_at": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "last_session_at": {
+                    "type": "string"
+                },
+                "sessions_completed": {
+                    "type": "integer"
+                },
+                "title": {
+                    "type": "string"
+                },
+                "type": {
+                    "type": "string"
+                }
+            }
+        },
+        "github_com_odatlar-bot_backend_internal_dto.MonitoredIndicator": {
+            "type": "object",
+            "properties": {
+                "created_at": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "last_logged_at": {
+                    "type": "string"
+                },
+                "last_value_label": {
+                    "type": "string"
+                },
+                "logs_total": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
+        "github_com_odatlar-bot_backend_internal_dto.MonitoredPractice": {
+            "type": "object",
+            "properties": {
+                "completions_total": {
+                    "type": "integer"
+                },
+                "created_at": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "last_completed_at": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "streak": {
+                    "type": "integer"
+                }
+            }
+        },
+        "github_com_odatlar-bot_backend_internal_dto.NotificationListResponse": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/github_com_odatlar-bot_backend_internal_dto.NotificationResponse"
+                    }
+                }
+            }
+        },
+        "github_com_odatlar-bot_backend_internal_dto.NotificationResponse": {
+            "type": "object",
+            "properties": {
+                "createdAt": {
+                    "type": "string"
+                },
+                "deliveryCount": {
+                    "type": "integer"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "payload": {
+                    "type": "array",
+                    "items": {
+                        "type": "integer"
+                    }
+                },
+                "preview": {
+                    "type": "string"
+                },
+                "sentAt": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "string"
+                },
+                "target": {
+                    "type": "string"
+                },
+                "targetUserIds": {
+                    "type": "array",
+                    "items": {
+                        "type": "integer"
+                    }
+                },
+                "title": {
+                    "type": "string"
+                },
+                "type": {
+                    "type": "string"
+                },
+                "updatedAt": {
+                    "type": "string"
+                }
+            }
+        },
+        "github_com_odatlar-bot_backend_internal_dto.PracticeHistoryEntryResponse": {
+            "type": "object",
+            "properties": {
+                "completedAt": {
+                    "type": "string"
+                },
+                "date": {
+                    "type": "string"
+                },
+                "habitId": {
+                    "type": "string"
+                },
+                "habitName": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "kind": {
+                    "type": "string"
+                }
+            }
+        },
+        "github_com_odatlar-bot_backend_internal_dto.PracticeHistoryResponse": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/github_com_odatlar-bot_backend_internal_dto.PracticeHistoryEntryResponse"
+                    }
+                }
+            }
+        },
+        "github_com_odatlar-bot_backend_internal_dto.PracticeListResponse": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/github_com_odatlar-bot_backend_internal_dto.PracticeResponse"
+                    }
+                }
+            }
+        },
+        "github_com_odatlar-bot_backend_internal_dto.PracticeResponse": {
+            "type": "object",
+            "properties": {
+                "benefits": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "completedToday": {
+                    "type": "boolean"
+                },
+                "createdAt": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "kind": {
+                    "type": "string"
+                },
+                "level": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "streak": {
+                    "type": "integer"
+                },
+                "xp": {
+                    "type": "integer"
+                },
+                "xp_reward": {
+                    "type": "integer"
+                }
+            }
+        },
         "github_com_odatlar-bot_backend_internal_dto.ProfileResponse": {
             "type": "object",
             "properties": {
                 "admin": {
                     "$ref": "#/definitions/github_com_odatlar-bot_backend_internal_dto.AdminResponse"
+                }
+            }
+        },
+        "github_com_odatlar-bot_backend_internal_dto.StartButtonDTO": {
+            "type": "object",
+            "properties": {
+                "enabled": {
+                    "type": "boolean"
+                },
+                "text": {
+                    "type": "string",
+                    "maxLength": 64
+                },
+                "web_app_url": {
+                    "type": "string"
+                }
+            }
+        },
+        "github_com_odatlar-bot_backend_internal_dto.UnreadCountResponse": {
+            "type": "object",
+            "properties": {
+                "unreadCount": {
+                    "type": "integer"
                 }
             }
         },
@@ -644,6 +5459,244 @@ const docTemplate = `{
                 }
             }
         },
+        "github_com_odatlar-bot_backend_internal_dto.UpdateBotSettingsRequest": {
+            "type": "object",
+            "required": [
+                "start"
+            ],
+            "properties": {
+                "start": {
+                    "$ref": "#/definitions/github_com_odatlar-bot_backend_internal_dto.BotStartDTO"
+                }
+            }
+        },
+        "github_com_odatlar-bot_backend_internal_dto.UpdateBotTokenRequest": {
+            "type": "object",
+            "required": [
+                "bot_token"
+            ],
+            "properties": {
+                "bot_token": {
+                    "type": "string",
+                    "minLength": 20
+                }
+            }
+        },
+        "github_com_odatlar-bot_backend_internal_dto.UpdateDominantRequest": {
+            "type": "object",
+            "required": [
+                "title"
+            ],
+            "properties": {
+                "cue": {
+                    "type": "string",
+                    "maxLength": 1000
+                },
+                "reward": {
+                    "type": "string",
+                    "maxLength": 1000
+                },
+                "title": {
+                    "type": "string",
+                    "maxLength": 255,
+                    "minLength": 1
+                }
+            }
+        },
+        "github_com_odatlar-bot_backend_internal_dto.UpdateGuideCourseRequest": {
+            "type": "object",
+            "required": [
+                "children",
+                "slug",
+                "title"
+            ],
+            "properties": {
+                "children": {
+                    "type": "array",
+                    "items": {
+                        "type": "integer"
+                    }
+                },
+                "description": {
+                    "type": "string",
+                    "maxLength": 5000
+                },
+                "is_published": {
+                    "type": "boolean"
+                },
+                "slug": {
+                    "type": "string",
+                    "maxLength": 100,
+                    "minLength": 1
+                },
+                "sort_order": {
+                    "type": "integer"
+                },
+                "title": {
+                    "type": "string",
+                    "maxLength": 255,
+                    "minLength": 1
+                }
+            }
+        },
+        "github_com_odatlar-bot_backend_internal_dto.UpdateGuideFileRequest": {
+            "type": "object",
+            "required": [
+                "ext",
+                "slug",
+                "title",
+                "url"
+            ],
+            "properties": {
+                "description": {
+                    "type": "string",
+                    "maxLength": 5000
+                },
+                "ext": {
+                    "type": "string",
+                    "maxLength": 20,
+                    "minLength": 1
+                },
+                "is_published": {
+                    "type": "boolean"
+                },
+                "size_bytes": {
+                    "type": "integer",
+                    "minimum": 0
+                },
+                "slug": {
+                    "type": "string",
+                    "maxLength": 100,
+                    "minLength": 1
+                },
+                "sort_order": {
+                    "type": "integer"
+                },
+                "title": {
+                    "type": "string",
+                    "maxLength": 255,
+                    "minLength": 1
+                },
+                "url": {
+                    "type": "string"
+                }
+            }
+        },
+        "github_com_odatlar-bot_backend_internal_dto.UpdateGuideVideoRequest": {
+            "type": "object",
+            "required": [
+                "src",
+                "title"
+            ],
+            "properties": {
+                "description": {
+                    "type": "string",
+                    "maxLength": 5000
+                },
+                "duration_min": {
+                    "type": "integer",
+                    "minimum": 0
+                },
+                "is_published": {
+                    "type": "boolean"
+                },
+                "poster": {
+                    "type": "string"
+                },
+                "sort_order": {
+                    "type": "integer"
+                },
+                "src": {
+                    "type": "string"
+                },
+                "title": {
+                    "type": "string",
+                    "maxLength": 255,
+                    "minLength": 1
+                }
+            }
+        },
+        "github_com_odatlar-bot_backend_internal_dto.UpdateIndicatorRequest": {
+            "type": "object",
+            "required": [
+                "name"
+            ],
+            "properties": {
+                "benefits": {
+                    "type": "array",
+                    "maxItems": 20,
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "name": {
+                    "type": "string",
+                    "maxLength": 255,
+                    "minLength": 1
+                }
+            }
+        },
+        "github_com_odatlar-bot_backend_internal_dto.UpdateNotificationRequest": {
+            "type": "object",
+            "required": [
+                "target",
+                "title",
+                "type"
+            ],
+            "properties": {
+                "payload": {
+                    "type": "array",
+                    "items": {
+                        "type": "integer"
+                    }
+                },
+                "preview": {
+                    "type": "string",
+                    "maxLength": 2000
+                },
+                "target": {
+                    "type": "string",
+                    "enum": [
+                        "all",
+                        "selected"
+                    ]
+                },
+                "target_user_ids": {
+                    "type": "array",
+                    "items": {
+                        "type": "integer"
+                    }
+                },
+                "title": {
+                    "type": "string",
+                    "maxLength": 255,
+                    "minLength": 1
+                },
+                "type": {
+                    "type": "string"
+                }
+            }
+        },
+        "github_com_odatlar-bot_backend_internal_dto.UpdatePracticeRequest": {
+            "type": "object",
+            "required": [
+                "name"
+            ],
+            "properties": {
+                "benefits": {
+                    "type": "array",
+                    "maxItems": 20,
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "name": {
+                    "type": "string",
+                    "maxLength": 255,
+                    "minLength": 1
+                }
+            }
+        },
         "github_com_odatlar-bot_backend_internal_dto.UpdateStatusRequest": {
             "type": "object",
             "required": [
@@ -663,10 +5716,261 @@ const docTemplate = `{
                 }
             }
         },
+        "github_com_odatlar-bot_backend_internal_dto.UpdateXPSettingsRequest": {
+            "type": "object",
+            "properties": {
+                "dominant_create_xp": {
+                    "type": "integer",
+                    "maximum": 100000,
+                    "minimum": 0
+                },
+                "dominant_session_xp": {
+                    "type": "integer",
+                    "maximum": 100000,
+                    "minimum": 0
+                },
+                "indicator_log_xp": {
+                    "type": "integer",
+                    "maximum": 100000,
+                    "minimum": 0
+                },
+                "level_up_xp": {
+                    "type": "integer",
+                    "maximum": 1000000,
+                    "minimum": 1
+                },
+                "practice_complete_xp": {
+                    "type": "integer",
+                    "maximum": 100000,
+                    "minimum": 0
+                }
+            }
+        },
+        "github_com_odatlar-bot_backend_internal_dto.UserActivityEntry": {
+            "type": "object",
+            "properties": {
+                "at": {
+                    "type": "string"
+                },
+                "detail": {
+                    "type": "string"
+                },
+                "kind": {
+                    "description": "practice_complete | indicator_log | dominant_session",
+                    "type": "string"
+                },
+                "title": {
+                    "type": "string"
+                }
+            }
+        },
+        "github_com_odatlar-bot_backend_internal_dto.UserActivityResponse": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/github_com_odatlar-bot_backend_internal_dto.UserActivityEntry"
+                    }
+                },
+                "from": {
+                    "type": "string"
+                },
+                "limit": {
+                    "type": "integer"
+                },
+                "to": {
+                    "type": "string"
+                }
+            }
+        },
+        "github_com_odatlar-bot_backend_internal_dto.UserMonitoringResponse": {
+            "type": "object",
+            "properties": {
+                "dominants": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/github_com_odatlar-bot_backend_internal_dto.MonitoredDominant"
+                    }
+                },
+                "generated_at": {
+                    "type": "string"
+                },
+                "indicators": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/github_com_odatlar-bot_backend_internal_dto.MonitoredIndicator"
+                    }
+                },
+                "practices": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/github_com_odatlar-bot_backend_internal_dto.MonitoredPractice"
+                    }
+                },
+                "recent_activity": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/github_com_odatlar-bot_backend_internal_dto.UserActivityEntry"
+                    }
+                },
+                "summary": {
+                    "$ref": "#/definitions/github_com_odatlar-bot_backend_internal_dto.UserMonitoringSummary"
+                },
+                "user": {
+                    "$ref": "#/definitions/github_com_odatlar-bot_backend_internal_dto.BotUserResponse"
+                }
+            }
+        },
+        "github_com_odatlar-bot_backend_internal_dto.UserMonitoringSummary": {
+            "type": "object",
+            "properties": {
+                "best_streak": {
+                    "type": "integer"
+                },
+                "days_since_start": {
+                    "type": "integer"
+                },
+                "dominant_count": {
+                    "type": "integer"
+                },
+                "dominant_sessions_today": {
+                    "type": "integer"
+                },
+                "dominant_sessions_total": {
+                    "type": "integer"
+                },
+                "dominant_sessions_week": {
+                    "type": "integer"
+                },
+                "indicator_count": {
+                    "type": "integer"
+                },
+                "indicator_logs_today": {
+                    "type": "integer"
+                },
+                "indicator_logs_total": {
+                    "type": "integer"
+                },
+                "indicator_logs_week": {
+                    "type": "integer"
+                },
+                "level": {
+                    "type": "integer"
+                },
+                "level_up_xp": {
+                    "type": "integer"
+                },
+                "practice_completions_today": {
+                    "type": "integer"
+                },
+                "practice_completions_total": {
+                    "type": "integer"
+                },
+                "practice_completions_week": {
+                    "type": "integer"
+                },
+                "practice_count": {
+                    "type": "integer"
+                },
+                "rank": {
+                    "type": "integer"
+                },
+                "xp": {
+                    "type": "integer"
+                }
+            }
+        },
+        "github_com_odatlar-bot_backend_internal_dto.UserNotificationListResponse": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/github_com_odatlar-bot_backend_internal_dto.UserNotificationResponse"
+                    }
+                },
+                "unreadCount": {
+                    "type": "integer"
+                }
+            }
+        },
+        "github_com_odatlar-bot_backend_internal_dto.UserNotificationResponse": {
+            "type": "object",
+            "properties": {
+                "createdAt": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "isRead": {
+                    "type": "boolean"
+                },
+                "payload": {
+                    "type": "array",
+                    "items": {
+                        "type": "integer"
+                    }
+                },
+                "preview": {
+                    "type": "string"
+                },
+                "title": {
+                    "type": "string"
+                },
+                "type": {
+                    "type": "string"
+                }
+            }
+        },
+        "github_com_odatlar-bot_backend_internal_dto.XPSettingsResponse": {
+            "type": "object",
+            "properties": {
+                "dominant_create_xp": {
+                    "type": "integer"
+                },
+                "dominant_session_xp": {
+                    "type": "integer"
+                },
+                "indicator_log_xp": {
+                    "type": "integer"
+                },
+                "level_up_xp": {
+                    "type": "integer"
+                },
+                "practice_complete_xp": {
+                    "type": "integer"
+                },
+                "updated_at": {
+                    "type": "string"
+                }
+            }
+        },
         "github_com_odatlar-bot_backend_pkg_response.ErrorBody": {
             "type": "object",
             "properties": {
                 "error": {
+                    "type": "string"
+                }
+            }
+        },
+        "github_com_odatlar-bot_backend_pkg_upload.SavedFile": {
+            "type": "object",
+            "properties": {
+                "ext": {
+                    "type": "string"
+                },
+                "path": {
+                    "type": "string"
+                },
+                "sizeBytes": {
+                    "type": "integer"
+                },
+                "sizeLabel": {
+                    "type": "string"
+                },
+                "url": {
                     "type": "string"
                 }
             }
@@ -678,6 +5982,18 @@ const docTemplate = `{
             "type": "apiKey",
             "name": "Authorization",
             "in": "header"
+        },
+        "BotToken": {
+            "description": "Telegram bot token. Format: Bearer {bot_token}",
+            "type": "apiKey",
+            "name": "Authorization",
+            "in": "header"
+        },
+        "TelegramInitData": {
+            "description": "Telegram WebApp initData. Alternativa: Authorization: tma {initData}",
+            "type": "apiKey",
+            "name": "X-Telegram-Init-Data",
+            "in": "header"
         }
     }
 }`
@@ -688,8 +6004,8 @@ var SwaggerInfo = &swag.Spec{
 	Host:             "localhost:8080",
 	BasePath:         "/api/v1",
 	Schemes:          []string{},
-	Title:            "Odatlar Bot Admin API",
-	Description:      "Admin CRUD, login va profil APIlari",
+	Title:            "Odatlar Bot API",
+	Description:      "Admin panel, Bot Runtime (Telegram WebApp), Qo'llanma (videolar, kurslar, fayllar) va Bildirishnomalar APIlari.",
 	InfoInstanceName: "swagger",
 	SwaggerTemplate:  docTemplate,
 	LeftDelim:        "{{",

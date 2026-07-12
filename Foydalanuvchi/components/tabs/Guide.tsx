@@ -3,13 +3,13 @@
 import { Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
-import { BookOpen, Download, FileText, Video } from 'lucide-react';
+import { BookOpen, FileText, Video } from 'lucide-react';
 import PageContainer from '@/components/PageContainer';
 import HabitTabNav from '@/components/habits/HabitTabNav';
 import CourseBlockList from '@/components/qollanma/CourseBlockList';
+import FileBlockList from '@/components/qollanma/FileBlockList';
 import VideoBlockList from '@/components/qollanma/VideoBlockList';
 import {
-  guideFiles,
   parseGuideTab,
   type GuideTab,
 } from '@/lib/guide';
@@ -87,38 +87,11 @@ function GuideContent() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -8 }}
             transition={{ duration: 0.2 }}
-            className="space-y-3"
           >
-            {guideFiles.map((file, index) => (
-              <motion.a
-                key={file.id}
-                href={file.url}
-                download
-                initial={{ opacity: 0, y: 8 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.05 }}
-                className="group flex items-start gap-3 rounded-2xl border border-slate-700/60 bg-slate-900/60 p-4 transition-colors hover:border-slate-600 hover:bg-slate-800/60"
-              >
-                <div className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-xl border border-slate-600/60 bg-slate-800/80">
-                  <FileText className="h-5 w-5 text-blue-400" />
-                </div>
-                <div className="min-w-0 flex-1">
-                  <div className="mb-1 flex items-start justify-between gap-2">
-                    <p className="font-semibold text-white group-hover:text-blue-200">
-                      {file.title}
-                    </p>
-                    <span className="flex-shrink-0 rounded-md border border-slate-600/60 bg-slate-800 px-1.5 py-0.5 text-[10px] font-bold uppercase text-slate-400">
-                      {file.ext}
-                    </span>
-                  </div>
-                  <p className="text-xs leading-relaxed text-slate-400">{file.description}</p>
-                  <p className="mt-2 flex items-center gap-1.5 text-xs font-medium text-blue-400">
-                    <Download className="h-3.5 w-3.5" />
-                    Yuklab olish · {file.sizeLabel}
-                  </p>
-                </div>
-              </motion.a>
-            ))}
+            <p className="mb-3 text-xs text-slate-500">
+              Materiallarni yuklab oling
+            </p>
+            <FileBlockList />
           </motion.div>
         )}
       </AnimatePresence>

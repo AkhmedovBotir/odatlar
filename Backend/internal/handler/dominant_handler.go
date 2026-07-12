@@ -19,6 +19,16 @@ func NewDominantHandler(svc *service.DominantService) *DominantHandler {
 	return &DominantHandler{service: svc}
 }
 
+// List godoc
+// @Summary      Dominantlar ro'yxati
+// @Tags         Dominants
+// @Produce      json
+// @Security     TelegramInitData
+// @Success      200  {object}  dto.DominantListResponse
+// @Failure      401  {object}  response.ErrorBody
+// @Failure      404  {object}  response.ErrorBody
+// @Failure      500  {object}  response.ErrorBody
+// @Router       /bot-runtime/dominants [get]
 func (h *DominantHandler) List(c *gin.Context) {
 	tgUser := getTelegramUser(c)
 	if tgUser == nil {
@@ -33,6 +43,19 @@ func (h *DominantHandler) List(c *gin.Context) {
 	response.OK(c, items)
 }
 
+// Create godoc
+// @Summary      Yangi dominant yaratish
+// @Tags         Dominants
+// @Accept       json
+// @Produce      json
+// @Security     TelegramInitData
+// @Param        body  body      dto.CreateDominantRequest  true  "Dominant ma'lumotlari"
+// @Success      201   {object}  dto.DominantResponse
+// @Failure      400   {object}  response.ErrorBody
+// @Failure      401   {object}  response.ErrorBody
+// @Failure      404   {object}  response.ErrorBody
+// @Failure      500   {object}  response.ErrorBody
+// @Router       /bot-runtime/dominants [post]
 func (h *DominantHandler) Create(c *gin.Context) {
 	tgUser := getTelegramUser(c)
 	if tgUser == nil {
@@ -53,6 +76,20 @@ func (h *DominantHandler) Create(c *gin.Context) {
 	response.Created(c, item)
 }
 
+// Update godoc
+// @Summary      Dominantni yangilash
+// @Tags         Dominants
+// @Accept       json
+// @Produce      json
+// @Security     TelegramInitData
+// @Param        id    path      int                        true  "Dominant ID"
+// @Param        body  body      dto.UpdateDominantRequest  true  "Yangilangan ma'lumotlar"
+// @Success      200   {object}  dto.DominantResponse
+// @Failure      400   {object}  response.ErrorBody
+// @Failure      401   {object}  response.ErrorBody
+// @Failure      404   {object}  response.ErrorBody
+// @Failure      500   {object}  response.ErrorBody
+// @Router       /bot-runtime/dominants/{id} [put]
 func (h *DominantHandler) Update(c *gin.Context) {
 	tgUser := getTelegramUser(c)
 	if tgUser == nil {
@@ -79,6 +116,17 @@ func (h *DominantHandler) Update(c *gin.Context) {
 	response.OK(c, item)
 }
 
+// Delete godoc
+// @Summary      Dominantni o'chirish
+// @Tags         Dominants
+// @Security     TelegramInitData
+// @Param        id  path  int  true  "Dominant ID"
+// @Success      204
+// @Failure      400  {object}  response.ErrorBody
+// @Failure      401  {object}  response.ErrorBody
+// @Failure      404  {object}  response.ErrorBody
+// @Failure      500  {object}  response.ErrorBody
+// @Router       /bot-runtime/dominants/{id} [delete]
 func (h *DominantHandler) Delete(c *gin.Context) {
 	tgUser := getTelegramUser(c)
 	if tgUser == nil {
@@ -98,6 +146,20 @@ func (h *DominantHandler) Delete(c *gin.Context) {
 	response.NoContent(c)
 }
 
+// CompleteSession godoc
+// @Summary      Dominant sessiyasini yakunlash
+// @Tags         Dominants
+// @Accept       json
+// @Produce      json
+// @Security     TelegramInitData
+// @Param        id    path      int                              true  "Dominant ID"
+// @Param        body  body      dto.CompleteDominantSessionRequest  true  "Sessiya ma'lumotlari"
+// @Success      200   {object}  dto.DominantResponse
+// @Failure      400   {object}  response.ErrorBody
+// @Failure      401   {object}  response.ErrorBody
+// @Failure      404   {object}  response.ErrorBody
+// @Failure      500   {object}  response.ErrorBody
+// @Router       /bot-runtime/dominants/{id}/session [post]
 func (h *DominantHandler) CompleteSession(c *gin.Context) {
 	tgUser := getTelegramUser(c)
 	if tgUser == nil {

@@ -434,6 +434,16 @@ Barcha endpointlar **Bearer token** talab qiladi. Admin bu API orqali bot sozlam
 
 > **Foydalanuvchi monitoringi:** Bitta foydalanuvchini to'liq kuzatish (faoliyat, statistika, XP, faoliyat lentasi) alohida hujjatda — [MONITORING_API.md](MONITORING_API.md) (`GET /bot/users/{id}/monitoring`, `GET /bot/users/{id}/activity`).
 
+> **Qo'llanmalar (videolar):** Admin CRUD va foydalanuvchi like/izoh API alohida hujjatda — [GUIDES_API.md](GUIDES_API.md) (`/bot/guides/videos`, `/bot-runtime/guides/videos`).
+>
+> **Qo'llanmalar (kurslar):** Admin CRUD va foydalanuvchi ko'rish API — [COURSES_API.md](COURSES_API.md) (`/bot/guides/courses`, `/bot-runtime/guides/courses`, `/bot-runtime/guides/lessons/{id}`).
+>
+> **Qo'llanmalar (fayllar):** Admin CRUD va foydalanuvchi yuklab olish API — [FILES_API.md](FILES_API.md) (`/bot/guides/files`, `/bot-runtime/guides/files`).
+>
+> **Bildirishnomalar:** Admin CRUD, yuborish va WebSocket — [NOTIFICATIONS_API.md](NOTIFICATIONS_API.md) (`/bot/notifications`, `/bot-runtime/notifications`, WebSocket).
+>
+> **So'rovnomalar:** Admin CRUD — [SURVEYS_API.md](SURVEYS_API.md) (`/bot/surveys`). Javob berish (authsiz) — [SURVEY_RESPONSES_API.md](SURVEY_RESPONSES_API.md) (`/surveys`). Javoblarni ko'rish (admin) — [SURVEY_RESPONSES_ADMIN_API.md](SURVEY_RESPONSES_ADMIN_API.md) (`/bot/surveys/responses`).
+
 ### Bot sozlamalarini olish
 
 ```

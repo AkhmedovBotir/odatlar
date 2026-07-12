@@ -393,35 +393,6 @@ export function buildArchiveDays(
   });
 }
 
-export function generateSeedHistory(habits: GoodHabit[]): HabitHistoryEntry[] {
-  const entries: HabitHistoryEntry[] = [];
-
-  for (const habit of habits) {
-    if (!isPractice(habit)) continue;
-    if (habit.streak === 0 && !habit.completedToday) continue;
-
-    const daysToLog = habit.completedToday ? habit.streak : habit.streak;
-    for (let i = 0; i < Math.max(daysToLog, habit.completedToday ? 1 : 0); i++) {
-      const d = new Date();
-      d.setDate(d.getDate() - (habit.completedToday ? i : i + 1));
-      d.setHours(8 + (i % 5), 30, 0, 0);
-      const date = getLocalDateKey(d);
-      entries.push({
-        id: `${habit.id}_${date}`,
-        habitId: habit.id,
-        habitName: habit.name,
-        date,
-        completedAt: d.toISOString(),
-        kind: 'practice',
-      });
-    }
-  }
-
-  return entries.sort(
-    (a, b) => new Date(b.completedAt).getTime() - new Date(a.completedAt).getTime()
-  );
-}
-
 export function addHistoryEntry(
   history: HabitHistoryEntry[],
   habit: GoodHabit

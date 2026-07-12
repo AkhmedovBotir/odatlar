@@ -19,6 +19,16 @@ func NewIndicatorHandler(svc *service.IndicatorService) *IndicatorHandler {
 	return &IndicatorHandler{service: svc}
 }
 
+// List godoc
+// @Summary      Ko'rsatkichlar ro'yxati
+// @Tags         Indicators
+// @Produce      json
+// @Security     TelegramInitData
+// @Success      200  {object}  dto.IndicatorListResponse
+// @Failure      401  {object}  response.ErrorBody
+// @Failure      404  {object}  response.ErrorBody
+// @Failure      500  {object}  response.ErrorBody
+// @Router       /bot-runtime/indicators [get]
 func (h *IndicatorHandler) List(c *gin.Context) {
 	tgUser := getTelegramUser(c)
 	if tgUser == nil {
@@ -33,6 +43,19 @@ func (h *IndicatorHandler) List(c *gin.Context) {
 	response.OK(c, items)
 }
 
+// Create godoc
+// @Summary      Yangi ko'rsatkich yaratish
+// @Tags         Indicators
+// @Accept       json
+// @Produce      json
+// @Security     TelegramInitData
+// @Param        body  body      dto.CreateIndicatorRequest  true  "Ko'rsatkich ma'lumotlari"
+// @Success      201   {object}  dto.IndicatorResponse
+// @Failure      400   {object}  response.ErrorBody
+// @Failure      401   {object}  response.ErrorBody
+// @Failure      404   {object}  response.ErrorBody
+// @Failure      500   {object}  response.ErrorBody
+// @Router       /bot-runtime/indicators [post]
 func (h *IndicatorHandler) Create(c *gin.Context) {
 	tgUser := getTelegramUser(c)
 	if tgUser == nil {
@@ -53,6 +76,20 @@ func (h *IndicatorHandler) Create(c *gin.Context) {
 	response.Created(c, item)
 }
 
+// Update godoc
+// @Summary      Ko'rsatkichni yangilash
+// @Tags         Indicators
+// @Accept       json
+// @Produce      json
+// @Security     TelegramInitData
+// @Param        id    path      int                         true  "Ko'rsatkich ID"
+// @Param        body  body      dto.UpdateIndicatorRequest  true  "Yangilangan ma'lumotlar"
+// @Success      200   {object}  dto.IndicatorResponse
+// @Failure      400   {object}  response.ErrorBody
+// @Failure      401   {object}  response.ErrorBody
+// @Failure      404   {object}  response.ErrorBody
+// @Failure      500   {object}  response.ErrorBody
+// @Router       /bot-runtime/indicators/{id} [put]
 func (h *IndicatorHandler) Update(c *gin.Context) {
 	tgUser := getTelegramUser(c)
 	if tgUser == nil {
@@ -79,6 +116,17 @@ func (h *IndicatorHandler) Update(c *gin.Context) {
 	response.OK(c, item)
 }
 
+// Delete godoc
+// @Summary      Ko'rsatkichni o'chirish
+// @Tags         Indicators
+// @Security     TelegramInitData
+// @Param        id  path  int  true  "Ko'rsatkich ID"
+// @Success      204
+// @Failure      400  {object}  response.ErrorBody
+// @Failure      401  {object}  response.ErrorBody
+// @Failure      404  {object}  response.ErrorBody
+// @Failure      500  {object}  response.ErrorBody
+// @Router       /bot-runtime/indicators/{id} [delete]
 func (h *IndicatorHandler) Delete(c *gin.Context) {
 	tgUser := getTelegramUser(c)
 	if tgUser == nil {
@@ -98,6 +146,20 @@ func (h *IndicatorHandler) Delete(c *gin.Context) {
 	response.NoContent(c)
 }
 
+// Log godoc
+// @Summary      Ko'rsatkich qiymatini yozish
+// @Tags         Indicators
+// @Accept       json
+// @Produce      json
+// @Security     TelegramInitData
+// @Param        id    path      int                      true  "Ko'rsatkich ID"
+// @Param        body  body      dto.LogIndicatorRequest  true  "Qiymat ma'lumotlari"
+// @Success      200   {object}  dto.IndicatorResponse
+// @Failure      400   {object}  response.ErrorBody
+// @Failure      401   {object}  response.ErrorBody
+// @Failure      404   {object}  response.ErrorBody
+// @Failure      500   {object}  response.ErrorBody
+// @Router       /bot-runtime/indicators/{id}/log [post]
 func (h *IndicatorHandler) Log(c *gin.Context) {
 	tgUser := getTelegramUser(c)
 	if tgUser == nil {
@@ -124,6 +186,19 @@ func (h *IndicatorHandler) Log(c *gin.Context) {
 	response.OK(c, item)
 }
 
+// ListHistory godoc
+// @Summary      Ko'rsatkichlar tarixi
+// @Tags         Indicators
+// @Produce      json
+// @Security     TelegramInitData
+// @Param        from  query  string  true  "Boshlanish sanasi (YYYY-MM-DD)"
+// @Param        to    query  string  true  "Tugash sanasi (YYYY-MM-DD)"
+// @Success      200   {object}  dto.IndicatorHistoryResponse
+// @Failure      400   {object}  response.ErrorBody
+// @Failure      401   {object}  response.ErrorBody
+// @Failure      404   {object}  response.ErrorBody
+// @Failure      500   {object}  response.ErrorBody
+// @Router       /bot-runtime/indicators/history [get]
 func (h *IndicatorHandler) ListHistory(c *gin.Context) {
 	tgUser := getTelegramUser(c)
 	if tgUser == nil {

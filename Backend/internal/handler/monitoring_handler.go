@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
+	"github.com/odatlar-bot/backend/internal/dto"
 	"github.com/odatlar-bot/backend/internal/service"
 	"github.com/odatlar-bot/backend/pkg/response"
 )
@@ -17,6 +18,11 @@ type MonitoringHandler struct {
 func NewMonitoringHandler(svc *service.MonitoringService) *MonitoringHandler {
 	return &MonitoringHandler{service: svc}
 }
+
+var (
+	_ dto.UserMonitoringResponse
+	_ dto.UserActivityResponse
+)
 
 // GetUserMonitoring godoc
 // @Summary      Foydalanuvchini to'liq monitoring

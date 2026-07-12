@@ -6,11 +6,19 @@ import {
   useContext,
   useEffect,
   useMemo,
+  useRef,
   useState,
 } from 'react';
-import { mockNotifications, type Notification } from '@/lib/notifications';
-
-const READ_KEY = 'read_notifications';
+import {
+  fetchNotifications,
+  markAllNotificationsRead,
+  markNotificationRead,
+  normalizeNotification,
+  notificationsWebSocketUrl,
+  type ApiUserNotification,
+  type StoredNotification,
+} from '@/lib/notificationsApi';
+import type { Notification } from '@/lib/notifications';
 
 interface NotificationContextValue {
   notifications: Notification[];
@@ -18,27 +26,93 @@ interface NotificationContextValue {
   isRead: (id: string) => boolean;
   markRead: (id: string) => void;
   markAllRead: () => void;
+  loading: boolean;
 }
 
 const NotificationContext = createContext<NotificationContextValue | null>(null);
 
-export function NotificationProvider({ children }: { children: React.ReactNode }) {
-  const [readIds, setReadIds] = useState<Set<string>>(new Set());
+function readIdsFromItems(items: StoredNotification[]): Set<string> {
+  return new Set(items.filter((item) => item.isRead).map((item) => item.id));
+}
 
-  useEffect(() => {
-    try {
-      const raw = localStorage.getItem(READ_KEY);
-      if (raw) {
-        setReadIds(new Set(JSON.parse(raw) as string[]));
-      }
-    } catch {
-      /* ignore */
-    }
+export function NotificationProvider({ children }: { children: React.ReactNode }) {
+  const [notifications, setNotifications] = useState<Notification[]>([]);
+  const [readIds, setReadIds] = useState<Set<string>>(() => new Set());
+  const [unreadCount, setUnreadCount] = useState(0);
+  const [loading, setLoading] = useState(true);
+  const socketRef = useRef<WebSocket | null>(null);
+
+  const applyServerList = useCallback((items: StoredNotification[], unread: number) => {
+    setNotifications(items);
+    setUnreadCount(unread);
+    setReadIds(readIdsFromItems(items));
   }, []);
 
-  const persist = useCallback((ids: Set<string>) => {
-    localStorage.setItem(READ_KEY, JSON.stringify([...ids]));
-    setReadIds(ids);
+  useEffect(() => {
+    let cancelled = false;
+
+    (async () => {
+      try {
+        const result = await fetchNotifications();
+        if (!cancelled) {
+          applyServerList(result.notifications, result.unreadCount);
+        }
+      } catch (error) {
+        console.error('[NotificationProvider] yuklash xatosi', error);
+        if (!cancelled) {
+          setNotifications([]);
+          setUnreadCount(0);
+        }
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
+    })();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [applyServerList]);
+
+  useEffect(() => {
+    const url = notificationsWebSocketUrl();
+    if (!url) return;
+
+    const socket = new WebSocket(url);
+    socketRef.current = socket;
+
+    socket.onmessage = (event) => {
+      try {
+        const message = JSON.parse(event.data as string) as {
+          event: string;
+          data: unknown;
+        };
+        if (message.event === 'notification') {
+          const raw = message.data as ApiUserNotification;
+          const item = normalizeNotification(raw);
+          setNotifications((prev) => {
+            if (prev.some((n) => n.id === item.id)) return prev;
+            return [item, ...prev];
+          });
+          if (!item.isRead) {
+            setUnreadCount((c) => c + 1);
+          }
+        } else if (message.event === 'unread_count') {
+          const data = message.data as { unreadCount: number };
+          setUnreadCount(data.unreadCount);
+        }
+      } catch (error) {
+        console.error('[NotificationProvider] WS xabar xatosi', error);
+      }
+    };
+
+    socket.onclose = () => {
+      socketRef.current = null;
+    };
+
+    return () => {
+      socket.close();
+      socketRef.current = null;
+    };
   }, []);
 
   const isRead = useCallback((id: string) => readIds.has(id), [readIds]);
@@ -48,29 +122,35 @@ export function NotificationProvider({ children }: { children: React.ReactNode }
       if (readIds.has(id)) return;
       const next = new Set(readIds);
       next.add(id);
-      persist(next);
+      setReadIds(next);
+      setUnreadCount((c) => Math.max(0, c - 1));
+
+      markNotificationRead(id)
+        .then(setUnreadCount)
+        .catch((error) => console.error('[NotificationProvider] markRead xatosi', error));
     },
-    [readIds, persist]
-  );
-
-  const markAllRead = useCallback(() => {
-    persist(new Set(mockNotifications.map((n) => n.id)));
-  }, [persist]);
-
-  const unreadCount = useMemo(
-    () => mockNotifications.filter((n) => !readIds.has(n.id)).length,
     [readIds]
   );
 
+  const markAllRead = useCallback(() => {
+    setReadIds(new Set(notifications.map((n) => n.id)));
+    setUnreadCount(0);
+
+    markAllNotificationsRead()
+      .then(setUnreadCount)
+      .catch((error) => console.error('[NotificationProvider] markAllRead xatosi', error));
+  }, [notifications]);
+
   const value = useMemo(
     () => ({
-      notifications: mockNotifications,
+      notifications,
       unreadCount,
       isRead,
       markRead,
       markAllRead,
+      loading,
     }),
-    [unreadCount, isRead, markRead, markAllRead]
+    [notifications, unreadCount, isRead, markRead, markAllRead, loading]
   );
 
   return (

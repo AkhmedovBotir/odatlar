@@ -1,5 +1,4 @@
 import type { GoodHabit, HabitHistoryEntry, UserData } from './types';
-import { generateSeedHistory } from './habits';
 import { normalizeHabits } from './indicators';
 
 const STORAGE_KEY = 'clubAppData';
@@ -49,51 +48,44 @@ export function applyDailyReset(data: UserData): UserData {
   };
 }
 
-export function buildInitialUserData(mock: Record<string, unknown>): UserData {
-  const user = mock.user as UserData;
-  const goodHabits = normalizeHabits(mock.goodHabits as UserData['goodHabits']);
+export function createEmptyUserData(): UserData {
   return {
-    name: user.name,
-    level: user.level,
-    xp: user.xp,
-    nextLevelXp: user.nextLevelXp,
-    coins: user.coins,
-    badges: user.badges,
-    goodHabits,
-    habitHistory: generateSeedHistory(goodHabits),
-    dominants: mock.dominants as UserData['dominants'],
-    leaderboard: mock.leaderboard as UserData['leaderboard'],
+    name: 'Foydalanuvchi',
+    level: 1,
+    xp: 0,
+    nextLevelXp: 1000,
+    coins: 0,
+    badges: [],
+    goodHabits: [],
+    habitHistory: [],
+    dominants: [],
+    leaderboard: [],
     lastResetDate: new Date().toDateString(),
   };
 }
 
 export async function loadUserData(): Promise<UserData> {
-  const response = await fetch('/mockup.json');
-  if (!response.ok) throw new Error('Ma\'lumotlarni yuklab bo\'lmadi');
-
-  const mock = await response.json();
-  const merged = buildInitialUserData(mock);
+  const empty = createEmptyUserData();
 
   try {
     const saved = localStorage.getItem(STORAGE_KEY);
     if (saved) {
       const parsed = JSON.parse(saved) as UserData;
       const { clubTasks: _removed, ...rest } = parsed as UserData & { clubTasks?: unknown };
-      const withLeaderboard = {
-        ...rest,
-        goodHabits: normalizeHabits(rest.goodHabits ?? merged.goodHabits),
-        leaderboard: merged.leaderboard,
-        habitHistory: rest.habitHistory?.length
-          ? rest.habitHistory
-          : generateSeedHistory(rest.goodHabits ?? merged.goodHabits),
-      };
-      return applyDailyReset(withLeaderboard);
+      return applyDailyReset(
+        dedupeUserData({
+          ...empty,
+          ...rest,
+          goodHabits: normalizeHabits(rest.goodHabits ?? []),
+          habitHistory: rest.habitHistory ?? [],
+        })
+      );
     }
   } catch {
-    // corrupted storage — fall back to fresh data
+    // corrupted storage — fall back to empty data
   }
 
-  return applyDailyReset(merged);
+  return applyDailyReset(empty);
 }
 
 export function saveUserData(data: UserData): void {

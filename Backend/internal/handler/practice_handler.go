@@ -21,6 +21,16 @@ func NewPracticeHandler(svc *service.PracticeService) *PracticeHandler {
 	return &PracticeHandler{service: svc}
 }
 
+// List godoc
+// @Summary      Amaliyotlar ro'yxati
+// @Tags         Practices
+// @Produce      json
+// @Security     TelegramInitData
+// @Success      200  {object}  dto.PracticeListResponse
+// @Failure      401  {object}  response.ErrorBody
+// @Failure      404  {object}  response.ErrorBody
+// @Failure      500  {object}  response.ErrorBody
+// @Router       /bot-runtime/practices [get]
 func (h *PracticeHandler) List(c *gin.Context) {
 	tgUser := getTelegramUser(c)
 	if tgUser == nil {
@@ -35,6 +45,19 @@ func (h *PracticeHandler) List(c *gin.Context) {
 	response.OK(c, items)
 }
 
+// Create godoc
+// @Summary      Yangi amaliyot yaratish
+// @Tags         Practices
+// @Accept       json
+// @Produce      json
+// @Security     TelegramInitData
+// @Param        body  body      dto.CreatePracticeRequest  true  "Amaliyot ma'lumotlari"
+// @Success      201   {object}  dto.PracticeResponse
+// @Failure      400   {object}  response.ErrorBody
+// @Failure      401   {object}  response.ErrorBody
+// @Failure      404   {object}  response.ErrorBody
+// @Failure      500   {object}  response.ErrorBody
+// @Router       /bot-runtime/practices [post]
 func (h *PracticeHandler) Create(c *gin.Context) {
 	tgUser := getTelegramUser(c)
 	if tgUser == nil {
@@ -55,6 +78,20 @@ func (h *PracticeHandler) Create(c *gin.Context) {
 	response.Created(c, item)
 }
 
+// Update godoc
+// @Summary      Amaliyotni yangilash
+// @Tags         Practices
+// @Accept       json
+// @Produce      json
+// @Security     TelegramInitData
+// @Param        id    path      int                        true  "Amaliyot ID"
+// @Param        body  body      dto.UpdatePracticeRequest  true  "Yangilangan ma'lumotlar"
+// @Success      200   {object}  dto.PracticeResponse
+// @Failure      400   {object}  response.ErrorBody
+// @Failure      401   {object}  response.ErrorBody
+// @Failure      404   {object}  response.ErrorBody
+// @Failure      500   {object}  response.ErrorBody
+// @Router       /bot-runtime/practices/{id} [put]
 func (h *PracticeHandler) Update(c *gin.Context) {
 	tgUser := getTelegramUser(c)
 	if tgUser == nil {
@@ -81,6 +118,17 @@ func (h *PracticeHandler) Update(c *gin.Context) {
 	response.OK(c, item)
 }
 
+// Delete godoc
+// @Summary      Amaliyotni o'chirish
+// @Tags         Practices
+// @Security     TelegramInitData
+// @Param        id  path  int  true  "Amaliyot ID"
+// @Success      204
+// @Failure      400  {object}  response.ErrorBody
+// @Failure      401  {object}  response.ErrorBody
+// @Failure      404  {object}  response.ErrorBody
+// @Failure      500  {object}  response.ErrorBody
+// @Router       /bot-runtime/practices/{id} [delete]
 func (h *PracticeHandler) Delete(c *gin.Context) {
 	tgUser := getTelegramUser(c)
 	if tgUser == nil {
@@ -100,6 +148,18 @@ func (h *PracticeHandler) Delete(c *gin.Context) {
 	response.NoContent(c)
 }
 
+// Toggle godoc
+// @Summary      Amaliyotni bajarilgan/bajarilmagan qilish
+// @Tags         Practices
+// @Produce      json
+// @Security     TelegramInitData
+// @Param        id  path  int  true  "Amaliyot ID"
+// @Success      200  {object}  dto.PracticeResponse
+// @Failure      400  {object}  response.ErrorBody
+// @Failure      401  {object}  response.ErrorBody
+// @Failure      404  {object}  response.ErrorBody
+// @Failure      500  {object}  response.ErrorBody
+// @Router       /bot-runtime/practices/{id}/toggle [post]
 func (h *PracticeHandler) Toggle(c *gin.Context) {
 	tgUser := getTelegramUser(c)
 	if tgUser == nil {
@@ -120,6 +180,19 @@ func (h *PracticeHandler) Toggle(c *gin.Context) {
 	response.OK(c, item)
 }
 
+// ListHistory godoc
+// @Summary      Amaliyotlar tarixi
+// @Tags         Practices
+// @Produce      json
+// @Security     TelegramInitData
+// @Param        from  query  string  true  "Boshlanish sanasi (YYYY-MM-DD)"
+// @Param        to    query  string  true  "Tugash sanasi (YYYY-MM-DD)"
+// @Success      200   {object}  dto.PracticeHistoryResponse
+// @Failure      400   {object}  response.ErrorBody
+// @Failure      401   {object}  response.ErrorBody
+// @Failure      404   {object}  response.ErrorBody
+// @Failure      500   {object}  response.ErrorBody
+// @Router       /bot-runtime/practices/history [get]
 func (h *PracticeHandler) ListHistory(c *gin.Context) {
 	tgUser := getTelegramUser(c)
 	if tgUser == nil {

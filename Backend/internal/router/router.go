@@ -24,6 +24,19 @@ func Setup(
 	leaderboardHandler *handler.LeaderboardHandler,
 	adminStatsHandler *handler.AdminStatsHandler,
 	monitoringHandler *handler.MonitoringHandler,
+	guideVideoAdminHandler *handler.GuideVideoAdminHandler,
+	guideVideoHandler *handler.GuideVideoHandler,
+	guideUploadHandler *handler.GuideUploadHandler,
+	guideCourseAdminHandler *handler.GuideCourseAdminHandler,
+	guideCourseHandler *handler.GuideCourseHandler,
+	guideFileAdminHandler *handler.GuideFileAdminHandler,
+	guideFileHandler *handler.GuideFileHandler,
+	notificationAdminHandler *handler.NotificationAdminHandler,
+	notificationHandler *handler.NotificationHandler,
+	notificationWSHandler *handler.NotificationWSHandler,
+	surveyAdminHandler *handler.SurveyAdminHandler,
+	surveyHandler *handler.SurveyHandler,
+	uploadDir string,
 	botSettingsRepo *repository.BotSettingsRepository,
 	jwtManager *jwt.Manager,
 ) *gin.Engine {
@@ -37,6 +50,10 @@ func Setup(
 	})
 
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
+
+	if uploadDir != "" {
+		r.Static("/api/v1/uploads", uploadDir)
+	}
 
 	api := r.Group("/api/v1")
 	{
@@ -73,6 +90,51 @@ func Setup(
 			bot.PUT("/xp-settings", xpSettingsHandler.UpdateSettings)
 			bot.GET("/stats", adminStatsHandler.GetOverview)
 			bot.GET("/leaderboard", adminStatsHandler.GetLeaderboard)
+			bot.GET("/guides/videos", guideVideoAdminHandler.List)
+			bot.POST("/guides/videos", guideVideoAdminHandler.Create)
+			bot.GET("/guides/videos/:id", guideVideoAdminHandler.Get)
+			bot.PUT("/guides/videos/:id", guideVideoAdminHandler.Update)
+			bot.DELETE("/guides/videos/:id", guideVideoAdminHandler.Delete)
+			bot.POST("/guides/upload/poster", guideUploadHandler.UploadPoster)
+			bot.POST("/guides/upload/video", guideUploadHandler.UploadVideo)
+			bot.POST("/guides/upload/file", guideUploadHandler.UploadFile)
+			bot.GET("/guides/courses", guideCourseAdminHandler.List)
+			bot.POST("/guides/courses", guideCourseAdminHandler.Create)
+			bot.GET("/guides/courses/:id", guideCourseAdminHandler.Get)
+			bot.PUT("/guides/courses/:id", guideCourseAdminHandler.Update)
+			bot.DELETE("/guides/courses/:id", guideCourseAdminHandler.Delete)
+			bot.GET("/guides/files", guideFileAdminHandler.List)
+			bot.POST("/guides/files", guideFileAdminHandler.Create)
+			bot.GET("/guides/files/:id", guideFileAdminHandler.Get)
+			bot.PUT("/guides/files/:id", guideFileAdminHandler.Update)
+			bot.DELETE("/guides/files/:id", guideFileAdminHandler.Delete)
+			bot.GET("/notifications", notificationAdminHandler.List)
+			bot.POST("/notifications", notificationAdminHandler.Create)
+			bot.GET("/notifications/:id", notificationAdminHandler.Get)
+			bot.PUT("/notifications/:id", notificationAdminHandler.Update)
+			bot.DELETE("/notifications/:id", notificationAdminHandler.Delete)
+			bot.POST("/notifications/:id/send", notificationAdminHandler.Send)
+			bot.GET("/surveys", surveyAdminHandler.List)
+			bot.GET("/surveys/file-formats", surveyAdminHandler.ListFileFormats)
+			bot.GET("/surveys/responses", surveyAdminHandler.ListResponses)
+			bot.GET("/surveys/responses/:responseId", surveyAdminHandler.GetResponse)
+			bot.DELETE("/surveys/responses/:responseId", surveyAdminHandler.DeleteResponse)
+			bot.POST("/surveys", surveyAdminHandler.Create)
+			bot.GET("/surveys/:id", surveyAdminHandler.Get)
+			bot.GET("/surveys/:id/responses/summary", surveyAdminHandler.GetSurveyResponseSummary)
+			bot.GET("/surveys/:id/responses", surveyAdminHandler.ListSurveyResponses)
+			bot.PUT("/surveys/:id", surveyAdminHandler.Update)
+			bot.DELETE("/surveys/:id", surveyAdminHandler.Delete)
+			bot.POST("/surveys/:id/publish", surveyAdminHandler.Publish)
+			bot.POST("/surveys/:id/close", surveyAdminHandler.Close)
+		}
+
+		surveys := api.Group("/surveys")
+		{
+			surveys.GET("", surveyHandler.List)
+			surveys.GET("/:id", surveyHandler.Get)
+			surveys.POST("/:id/responses", surveyHandler.Submit)
+			surveys.POST("/:id/upload", surveyHandler.Upload)
 		}
 
 		botRuntime := api.Group("/bot-runtime")
@@ -107,6 +169,19 @@ func Setup(
 			botWebApp.DELETE("/dominants/:id", dominantHandler.Delete)
 			botWebApp.POST("/dominants/:id/session", dominantHandler.CompleteSession)
 			botWebApp.GET("/leaderboard", leaderboardHandler.Get)
+			botWebApp.GET("/guides/videos", guideVideoHandler.List)
+			botWebApp.GET("/guides/videos/:id", guideVideoHandler.Get)
+			botWebApp.POST("/guides/videos/:id/like", guideVideoHandler.ToggleLike)
+			botWebApp.GET("/guides/videos/:id/comments", guideVideoHandler.ListComments)
+			botWebApp.POST("/guides/videos/:id/comments", guideVideoHandler.AddComment)
+			botWebApp.GET("/guides/courses", guideCourseHandler.List)
+			botWebApp.GET("/guides/courses/:id", guideCourseHandler.Get)
+			botWebApp.GET("/guides/lessons/:lessonId", guideCourseHandler.GetLesson)
+			botWebApp.GET("/guides/files", guideFileHandler.List)
+			botWebApp.GET("/notifications", notificationHandler.List)
+			botWebApp.POST("/notifications/:id/read", notificationHandler.MarkRead)
+			botWebApp.POST("/notifications/read-all", notificationHandler.MarkAllRead)
+			botWebApp.GET("/ws/notifications", notificationWSHandler.Connect)
 		}
 	}
 

@@ -5,6 +5,7 @@ import (
 	"strconv"
 
 	"github.com/gin-gonic/gin"
+	"github.com/odatlar-bot/backend/internal/dto"
 	"github.com/odatlar-bot/backend/internal/service"
 	"github.com/odatlar-bot/backend/pkg/response"
 )
@@ -17,6 +18,19 @@ func NewLeaderboardHandler(svc *service.LeaderboardService) *LeaderboardHandler 
 	return &LeaderboardHandler{service: svc}
 }
 
+var _ dto.LeaderboardResponse
+
+// Get godoc
+// @Summary      Reyting jadvali (WebApp)
+// @Tags         Leaderboard
+// @Produce      json
+// @Security     TelegramInitData
+// @Param        limit  query  int  false  "Natijalar soni (default 20)"
+// @Success      200    {object}  dto.LeaderboardResponse
+// @Failure      401    {object}  response.ErrorBody
+// @Failure      404    {object}  response.ErrorBody
+// @Failure      500    {object}  response.ErrorBody
+// @Router       /bot-runtime/leaderboard [get]
 func (h *LeaderboardHandler) Get(c *gin.Context) {
 	tgUser := getTelegramUser(c)
 	if tgUser == nil {

@@ -4,6 +4,8 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { Download, ExternalLink, FileText, PlayCircle } from 'lucide-react';
 import DeltaText from '@/components/qollanma/DeltaText';
+import VideoPlayer from '@/components/qollanma/VideoPlayer';
+import { resolveMediaUrl } from '@/lib/guidesApi';
 import type { LessonBlock } from '@/lib/guideCourse';
 
 interface LessonBlockViewProps {
@@ -27,17 +29,10 @@ export default function LessonBlockView({ block }: LessonBlockViewProps) {
     case 'video':
       return (
         <div className="overflow-hidden rounded-2xl border border-slate-700/60 bg-black shadow-lg shadow-black/20">
-          <div className="relative aspect-video">
-            <video
-              className="h-full w-full object-contain"
-              controls
-              playsInline
-              preload="metadata"
-              poster={block.poster}
-            >
-              <source src={block.src} type="video/mp4" />
-            </video>
-          </div>
+          <VideoPlayer
+            src={resolveMediaUrl(block.src)}
+            poster={block.poster ? resolveMediaUrl(block.poster) : undefined}
+          />
           {block.caption && (
             <div className="flex items-start gap-2 border-t border-slate-700/50 px-4 py-3">
               <PlayCircle className="mt-0.5 h-4 w-4 flex-shrink-0 text-violet-400" />
@@ -52,7 +47,7 @@ export default function LessonBlockView({ block }: LessonBlockViewProps) {
         <figure className="overflow-hidden rounded-2xl border border-slate-700/60 bg-slate-900/50">
           <div className="relative aspect-[16/10] bg-slate-800">
             <Image
-              src={block.src}
+              src={resolveMediaUrl(block.src)}
               alt={block.alt ?? ''}
               fill
               className="object-cover"
@@ -96,7 +91,7 @@ export default function LessonBlockView({ block }: LessonBlockViewProps) {
     case 'file':
       return (
         <a
-          href={block.url}
+          href={resolveMediaUrl(block.url)}
           download
           className="group flex items-start gap-3 rounded-2xl border border-slate-700/60 bg-slate-900/60 p-4 transition-colors hover:border-slate-600 hover:bg-slate-800/60"
         >

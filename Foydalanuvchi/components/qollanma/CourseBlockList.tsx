@@ -1,13 +1,17 @@
 'use client';
 
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { BookOpen, ChevronRight } from 'lucide-react';
-import { countLessons, courseHref, guideCourses, isSection, type Course } from '@/lib/guideCourse';
+import { countLessons, courseHref, isSection } from '@/lib/guideCourse';
+import { fetchGuideCourses, type CourseListItem } from '@/lib/coursesApi';
 
-function CourseBlockCard({ course, index }: { course: Course; index: number }) {
-  const totalLessons = countLessons(course.children);
-  const sectionCount = course.children.filter(isSection).length;
+function CourseBlockCard({ course, index }: { course: CourseListItem; index: number }) {
+  const totalLessons =
+    course.lessonCount ?? (course.children ? countLessons(course.children) : 0);
+  const sectionCount =
+    course.sectionCount ?? (course.children ? course.children.filter(isSection).length : 0);
 
   return (
     <motion.div
@@ -50,9 +54,49 @@ function CourseBlockCard({ course, index }: { course: Course; index: number }) {
 }
 
 export default function CourseBlockList() {
+  const [courses, setCourses] = useState<CourseListItem[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    (async () => {
+      try {
+        const remote = await fetchGuideCourses();
+        if (!cancelled) setCourses(remote);
+      } catch (error) {
+        console.error('[CourseBlockList] kurslar yuklash xatosi', error);
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
+    })();
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="space-y-3">
+        {[0, 1].map((i) => (
+          <div key={i} className="h-36 animate-pulse rounded-2xl bg-slate-800/50" />
+        ))}
+      </div>
+    );
+  }
+
+  if (courses.length === 0) {
+    return (
+      <div className="rounded-2xl border border-slate-700/60 bg-slate-900/60 p-6 text-center text-sm text-slate-400">
+        Hozircha kurslar mavjud emas
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-3">
-      {guideCourses.map((course, index) => (
+      {courses.map((course, index) => (
         <CourseBlockCard key={course.id} course={course} index={index} />
       ))}
     </div>

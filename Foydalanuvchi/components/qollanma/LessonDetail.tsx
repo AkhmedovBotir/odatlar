@@ -1,13 +1,14 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { ChevronRight, Clock3 } from 'lucide-react';
 import PageContainer from '@/components/PageContainer';
 import LessonBlockView from '@/components/qollanma/LessonBlockView';
-import { findLesson, getLessonBlockTypes } from '@/lib/guideCourse';
+import { fetchGuideLesson } from '@/lib/coursesApi';
+import { getLessonBlockTypes, type LessonContext } from '@/lib/guideCourse';
 
 interface LessonDetailProps {
   lessonId: string;
@@ -15,13 +16,33 @@ interface LessonDetailProps {
 
 export default function LessonDetail({ lessonId }: LessonDetailProps) {
   const router = useRouter();
-  const context = findLesson(lessonId);
+  const [context, setContext] = useState<LessonContext | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  const loadRemote = useCallback(async () => {
+    setLoading(true);
+    try {
+      const remote = await fetchGuideLesson(lessonId);
+      setContext(remote);
+    } catch (error) {
+      console.error('[LessonDetail] dars yuklash xatosi', error);
+      router.replace('/qollanma?tab=kurslar');
+    } finally {
+      setLoading(false);
+    }
+  }, [lessonId, router]);
 
   useEffect(() => {
-    if (!context) {
-      router.replace('/qollanma');
-    }
-  }, [context, router]);
+    loadRemote();
+  }, [loadRemote]);
+
+  if (loading) {
+    return (
+      <PageContainer>
+        <div className="h-64 animate-pulse rounded-2xl bg-slate-800/50" />
+      </PageContainer>
+    );
+  }
 
   if (!context) return null;
 

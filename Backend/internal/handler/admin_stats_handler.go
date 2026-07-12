@@ -4,6 +4,7 @@ import (
 	"strconv"
 
 	"github.com/gin-gonic/gin"
+	"github.com/odatlar-bot/backend/internal/dto"
 	"github.com/odatlar-bot/backend/internal/service"
 	"github.com/odatlar-bot/backend/pkg/response"
 )
@@ -15,6 +16,11 @@ type AdminStatsHandler struct {
 func NewAdminStatsHandler(svc *service.AdminStatsService) *AdminStatsHandler {
 	return &AdminStatsHandler{service: svc}
 }
+
+var (
+	_ dto.AdminStatsResponse
+	_ dto.AdminLeaderboardResponse
+)
 
 // GetOverview godoc
 // @Summary      Admin statistikasi

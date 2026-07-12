@@ -20,6 +20,13 @@ type Config struct {
 
 	JWTSecret      string
 	JWTExpiryHours int
+
+	UploadDir        string
+	PublicBaseURL    string
+	SurveyFrontendURL string
+	MaxPosterBytes    int64
+	MaxVideoBytes     int64
+	MaxGuideFileBytes int64
 }
 
 func Load() (*Config, error) {
@@ -34,6 +41,12 @@ func Load() (*Config, error) {
 		DBSSLMode:      getEnv("DB_SSLMODE", "disable"),
 		JWTSecret:      getEnv("JWT_SECRET", ""),
 		JWTExpiryHours: getEnvInt("JWT_EXPIRY_HOURS", 24),
+		UploadDir:      getEnv("UPLOAD_DIR", "./uploads"),
+		PublicBaseURL:  getEnv("PUBLIC_BASE_URL", "http://localhost:8080"),
+		SurveyFrontendURL: getEnv("SURVEY_FRONTEND_URL", "http://localhost:5174"),
+		MaxPosterBytes:    int64(getEnvInt("MAX_POSTER_UPLOAD_MB", 5)) * 1024 * 1024,
+		MaxVideoBytes:     int64(getEnvInt("MAX_VIDEO_UPLOAD_MB", 200)) * 1024 * 1024,
+		MaxGuideFileBytes: int64(getEnvInt("MAX_GUIDE_FILE_UPLOAD_MB", 20)) * 1024 * 1024,
 	}
 
 	if cfg.JWTSecret == "" {

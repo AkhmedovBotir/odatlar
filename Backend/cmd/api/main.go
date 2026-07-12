@@ -1,8 +1,8 @@
 // Odatlar Bot Backend API
 //
-// @title           Odatlar Bot Admin API
+// @title           Odatlar Bot API
 // @version         1.0
-// @description     Admin CRUD, login va profil APIlari
+// @description     Admin panel, Bot Runtime (Telegram WebApp), Qo'llanma (videolar, kurslar, fayllar) va Bildirishnomalar APIlari.
 // @termsOfService  http://swagger.io/terms/
 //
 // @contact.name   API Support
@@ -22,7 +22,12 @@
 // @securityDefinitions.apikey BotToken
 // @in header
 // @name Authorization
-// @description Admin panelda saqlangan Telegram bot token. Format: Bearer {bot_token}
+// @description Telegram bot token. Format: Bearer {bot_token}
+//
+// @securityDefinitions.apikey TelegramInitData
+// @in header
+// @name X-Telegram-Init-Data
+// @description Telegram WebApp initData. Alternativa: Authorization: tma {initData}
 package main
 
 import (
@@ -46,6 +51,8 @@ import (
 	"github.com/odatlar-bot/backend/internal/router"
 	"github.com/odatlar-bot/backend/internal/service"
 	jwtPkg "github.com/odatlar-bot/backend/pkg/jwt"
+	"github.com/odatlar-bot/backend/pkg/upload"
+	"github.com/odatlar-bot/backend/pkg/ws"
 )
 
 func main() {
@@ -111,8 +118,35 @@ func main() {
 	monitoringRepo := repository.NewMonitoringRepository(pool)
 	monitoringService := service.NewMonitoringService(monitoringRepo, botUserRepo, xpService)
 	monitoringHandler := handler.NewMonitoringHandler(monitoringService)
+	guideVideoRepo := repository.NewGuideVideoRepository(pool)
+	uploadStorage := upload.NewStorage(cfg.UploadDir, cfg.PublicBaseURL, cfg.MaxPosterBytes, cfg.MaxVideoBytes, cfg.MaxGuideFileBytes)
+	if err := uploadStorage.EnsureDirs(); err != nil {
+		log.Fatalf("upload dir error: %v", err)
+	}
+	guideVideoService := service.NewGuideVideoService(guideVideoRepo, botUserRepo, uploadStorage)
+	guideVideoAdminHandler := handler.NewGuideVideoAdminHandler(guideVideoService)
+	guideVideoHandler := handler.NewGuideVideoHandler(guideVideoService)
+	guideUploadHandler := handler.NewGuideUploadHandler(uploadStorage)
+	guideCourseRepo := repository.NewGuideCourseRepository(pool)
+	guideCourseService := service.NewGuideCourseService(guideCourseRepo)
+	guideCourseAdminHandler := handler.NewGuideCourseAdminHandler(guideCourseService)
+	guideCourseHandler := handler.NewGuideCourseHandler(guideCourseService)
+	guideFileRepo := repository.NewGuideFileRepository(pool)
+	guideFileService := service.NewGuideFileService(guideFileRepo, uploadStorage)
+	guideFileAdminHandler := handler.NewGuideFileAdminHandler(guideFileService)
+	guideFileHandler := handler.NewGuideFileHandler(guideFileService)
+	notificationHub := ws.NewHub()
+	notificationRepo := repository.NewNotificationRepository(pool)
+	notificationService := service.NewNotificationService(notificationRepo, botUserRepo, notificationHub)
+	notificationAdminHandler := handler.NewNotificationAdminHandler(notificationService)
+	notificationHandler := handler.NewNotificationHandler(notificationService)
+	notificationWSHandler := handler.NewNotificationWSHandler(notificationService, botSettingsRepo, botUserRepo)
+	surveyRepo := repository.NewSurveyRepository(pool)
+	surveyService := service.NewSurveyService(surveyRepo, uploadStorage, cfg.SurveyFrontendURL)
+	surveyAdminHandler := handler.NewSurveyAdminHandler(surveyService)
+	surveyHandler := handler.NewSurveyHandler(surveyService)
 
-	engine := router.Setup(adminHandler, authHandler, botSettingsHandler, botRuntimeHandler, practiceHandler, indicatorHandler, archiveHandler, habitSummaryHandler, dominantHandler, xpSettingsHandler, leaderboardHandler, adminStatsHandler, monitoringHandler, botSettingsRepo, jwtManager)
+	engine := router.Setup(adminHandler, authHandler, botSettingsHandler, botRuntimeHandler, practiceHandler, indicatorHandler, archiveHandler, habitSummaryHandler, dominantHandler, xpSettingsHandler, leaderboardHandler, adminStatsHandler, monitoringHandler, guideVideoAdminHandler, guideVideoHandler, guideUploadHandler, guideCourseAdminHandler, guideCourseHandler, guideFileAdminHandler, guideFileHandler, notificationAdminHandler, notificationHandler, notificationWSHandler, surveyAdminHandler, surveyHandler, cfg.UploadDir, botSettingsRepo, jwtManager)
 
 	addr := fmt.Sprintf(":%s", cfg.AppPort)
 	srv := &http.Server{
